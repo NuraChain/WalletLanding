@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "printWidth": 100,
+  "trailingComma": "all",
+  "insertFinalNewline": true,
+  "sortImports": true,
+  "sortTailwindcss": { "stylesheet": "./src/index.css" },
+  "ignorePatterns": ["dist", ".vite-react-ssg-temp"]
+}

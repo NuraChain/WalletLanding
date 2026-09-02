@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <!--
+      The root element above carries no lang/dir on purpose: each prerendered
+      page sets its own (Persian gets lang="fa" dir="rtl") from
+      src/components/Seo.tsx, and the SSG injector prepends attributes to the
+      first "<html" it finds rather than replacing them. That is also why this
+      comment is inside <head>: it must not come before the root element.
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#070b12" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- The Latin faces every language uses. Per-script additions come from Seo.tsx. -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+
+    <!--
+      Content meta (title, description, canonical, hreflang, Open Graph,
+      JSON-LD) lives in src/components/Seo.tsx and is prepended into this head
+      at build time. Keep those tags out of this file: the SSG injector
+      prepends rather than replaces, so anything duplicated here ships twice.
+    -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

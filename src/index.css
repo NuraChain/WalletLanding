@@ -1,0 +1,559 @@
+@import 'tailwindcss';
+
+/*
+  Nura Wallet landing - "datasheet for a sealed instrument".
+
+  The palette is the app icon's: blue-black ground, paper-white ink, and the
+  icon's one blue reserved exclusively for the seal boundary. The primary
+  action stays white on purpose so the blue keeps meaning exactly one thing.
+*/
+@theme {
+  --font-display: 'Archivo', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', monospace;
+
+  /* Page: the icon's black, pulled a step toward blue. */
+  --color-paper: #070b12;
+  --color-card: #0d131c;
+  --color-rule: #1b2431;
+
+  /* Ink: the icon's white. */
+  --color-ink: #f2f5f9;
+  --color-ink-2: #8a97ab;
+
+  /* The device: graphite with a blue cast, a step lighter than the ground. */
+  --color-slab: #131a25;
+  --color-slab-hi: #222c3a;
+  --color-slab-lo: #090d14;
+
+  /* The seal: the icon's blue. Reserved for the boundary and the sealed state
+     and nothing else - not even the primary action. `seal-ink` is the same hue
+     lifted a little for small text. */
+  --color-seal: #22b8f5;
+  --color-seal-ink: #4fc5f7;
+
+  --text-display: clamp(2.5rem, 1rem + 4.8vw, 4.75rem);
+  --text-h2: clamp(1.9rem, 1.1rem + 2.6vw, 3.1rem);
+}
+
+@layer base {
+  :root {
+    /* Latin typography. Each writing system below overrides what it must. */
+    --tracking-display: -0.035em;
+    --tracking-eyebrow: 0.16em;
+    --tracking-label: 0.06em;
+    --leading-display: 0.94;
+  }
+
+  /* Keyed off `<body data-script>` (set per page in Seo.tsx) rather than
+     `:lang()` or `html[lang]`: the critical-CSS step (beasties) can evaluate
+     neither against the root element and would leave these rules out of the
+     inlined styles, so a Persian page would first paint with Latin tracking. */
+
+  /* Cyrillic: Archivo has no Cyrillic, so Golos Text takes those glyphs. */
+  body[data-script='cyrillic'] {
+    --font-display: 'Archivo', 'Golos Text', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --font-sans: 'Archivo', 'Golos Text', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --tracking-display: -0.025em;
+  }
+
+  /* Arabic script (Persian, Arabic): letters connect, so no tracking anywhere,
+     and taller lines for the ascenders and marks. */
+  body[data-script='arabic'] {
+    --font-display: 'Archivo', 'Vazirmatn', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --font-sans: 'Archivo', 'Vazirmatn', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Vazirmatn', ui-monospace, 'Cascadia Mono', monospace;
+    --tracking-display: 0;
+    --tracking-eyebrow: 0;
+    --tracking-label: 0;
+    --leading-display: 1.25;
+  }
+
+  /* Devanagari: conjuncts and matras need their space too. */
+  body[data-script='devanagari'] {
+    --font-display:
+      'Archivo', 'Noto Sans Devanagari', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --font-sans:
+      'Archivo', 'Noto Sans Devanagari', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Noto Sans Devanagari', ui-monospace, 'Cascadia Mono', monospace;
+    --tracking-display: 0;
+    --tracking-eyebrow: 0;
+    --tracking-label: 0;
+    --leading-display: 1.3;
+  }
+
+  /* Han: no negative tracking on ideographs. */
+  body[data-script='han'] {
+    --font-display: 'Archivo', 'Noto Sans SC', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --font-sans: 'Archivo', 'Noto Sans SC', ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Noto Sans SC', ui-monospace, 'Cascadia Mono', monospace;
+    --tracking-display: 0;
+    --leading-display: 1.2;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* Keep the fallback face at the same visual size so the swap doesn't shift
+       layout. */
+    font-size-adjust: from-font;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* x-height matching is a Latin idea; it misjudges these scripts. */
+  body:is([data-script='arabic'], [data-script='devanagari'], [data-script='han']) {
+    font-size-adjust: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-seal-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* ---------- Datasheet furniture ---------- */
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-ink-2);
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: var(--tracking-display);
+    line-height: var(--leading-display);
+    text-wrap: balance;
+  }
+
+  /* A hairline that carries a tick at each end, like a dimension line. */
+  .rule-ticked {
+    position: relative;
+    height: 1px;
+    background: var(--color-rule);
+  }
+  .rule-ticked::before,
+  .rule-ticked::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+    background: var(--color-rule);
+  }
+  .rule-ticked::before {
+    left: 0;
+  }
+  .rule-ticked::after {
+    right: 0;
+  }
+
+  /* ---------- The 3D scene ---------- */
+
+  .scene {
+    perspective: 1500px;
+    perspective-origin: 52% 42%;
+  }
+
+  /* Rotated by pointer via --rx / --ry, set in usePointerTilt. */
+  .stage {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .plane {
+    position: absolute;
+    transform-style: preserve-3d;
+  }
+
+  /* Faint measurement grid, furthest back. */
+  .plane-grid {
+    inset: -14% -10%;
+    transform: translateZ(-230px);
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-ink) 7%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-ink) 7%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 34px 34px;
+    mask-image: radial-gradient(ellipse at 50% 45%, #000 35%, transparent 78%);
+  }
+
+  /* The encrypted vault, sitting behind the device. Deliberately unreadable. */
+  .plane-core {
+    inset: 2% 20% 68% 1%;
+    transform: translateZ(-95px);
+    padding: 0.9rem;
+    overflow: hidden;
+    border-radius: 6px;
+    background: color-mix(in oklab, var(--color-seal) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-seal) 38%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    line-height: 1.5;
+    color: color-mix(in oklab, var(--color-seal-ink) 72%, transparent);
+    word-break: break-all;
+    filter: blur(0.55px);
+    mask-image: linear-gradient(to bottom, #000 52%, transparent 94%);
+    user-select: none;
+  }
+
+  /* The boundary the key never crosses. */
+  .plane-ring {
+    inset: 15% 3% 13% 5%;
+    transform: translateZ(0);
+    border: 1px solid color-mix(in oklab, var(--color-seal) 55%, transparent);
+    border-radius: 4px;
+  }
+  .plane-ring::before,
+  .plane-ring::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--color-seal);
+  }
+  .plane-ring::before {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .plane-ring::after {
+    right: -1px;
+    bottom: -1px;
+    border-top: 0;
+    border-left: 0;
+  }
+
+  /* The device itself. On a dark ground it needs an edge, not a shadow, to
+     separate from the page: the hairline ring and top highlight do that. */
+  .plane-slab {
+    inset: 26% 10% 24% 12%;
+    transform: translateZ(70px);
+    border-radius: 12px;
+    background: linear-gradient(
+      158deg,
+      var(--color-slab-hi),
+      var(--color-slab) 46%,
+      var(--color-slab-lo)
+    );
+    box-shadow:
+      0 1px 0 0 rgb(255 255 255 / 0.1) inset,
+      0 0 0 1px rgb(255 255 255 / 0.07),
+      0 42px 60px -28px rgb(0 0 0 / 0.9),
+      0 8px 18px -10px rgb(0 0 0 / 0.7);
+  }
+
+  /* Extruded faces, so the slab reads as a solid when the stage tilts. */
+  .slab-face {
+    position: absolute;
+  }
+  .slab-face-bottom {
+    inset: auto 0 0 0;
+    height: 15px;
+    background: var(--color-slab-lo);
+    transform-origin: top center;
+    transform: rotateX(-90deg);
+    border-radius: 0 0 12px 12px;
+  }
+  .slab-face-right {
+    inset: 0 0 0 auto;
+    width: 15px;
+    background: linear-gradient(to bottom, var(--color-slab-hi), var(--color-slab-lo));
+    transform-origin: center left;
+    transform: rotateY(90deg);
+    border-radius: 0 12px 12px 0;
+  }
+
+  /* The sealed-state chip, closest to the viewer. */
+  .plane-chip {
+    right: 4%;
+    bottom: 14%;
+    transform: translateZ(126px);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    background: var(--color-card);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--color-seal) 40%, transparent),
+      0 16px 26px -14px rgb(0 0 0 / 0.8);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: var(--tracking-label);
+    white-space: nowrap;
+  }
+
+  /* The headline shares the scene with the device, one plane in front of it, so
+     type and object parallax against each other. This is the signature. */
+  .plane-copy {
+    transform: translateZ(80px);
+  }
+}
+
+@layer utilities {
+  /* Idle drift, so the scene is alive before the pointer arrives. */
+  @media (prefers-reduced-motion: no-preference) {
+    .drift {
+      animation: drift 13s ease-in-out infinite;
+    }
+  }
+
+  @keyframes drift {
+    0%,
+    100% {
+      translate: 0 -5px;
+    }
+    50% {
+      translate: 0 5px;
+    }
+  }
+
+  /*
+    Scroll reveals are decorative progressive enhancement: without support the
+    content is simply already visible, which is also what the prerendered HTML
+    and every crawler sees.
+  */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
+      .reveal {
+        animation: reveal auto linear backwards;
+        animation-timeline: view();
+        animation-range: entry 8% entry 58%;
+      }
+    }
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+  }
+}
+
+@layer components {
+  /* Wrapper the device planes are positioned against. */
+  .device-box {
+    position: relative;
+    aspect-ratio: 7 / 6;
+    width: 100%;
+    transform-style: preserve-3d;
+    /* Resting angle. Without it the planes stack into flat rectangles and the
+       whole scene only comes alive on hover - which never happens on touch. */
+    transform: rotateX(6deg) rotateY(-17deg);
+  }
+
+  /* ---------- Controls ---------- */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.8rem 1.15rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  /* White, like the blades of the icon. Not blue: see the note on the seal. */
+  .btn-primary {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .btn-primary:hover {
+    background: #fff;
+  }
+
+  .btn-ghost {
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-rule);
+  }
+  .btn-ghost:hover {
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
+
+  /* ---------- Language menu ---------- */
+
+  /* On phones the panel spans the header row (its containing block is the
+     header's inner `relative` div); from `sm` up it hangs off the trigger.
+     See the media query at the end of this block. */
+  .lang {
+    position: static;
+  }
+  .lang > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.25rem;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-ink-2);
+    transition: color 160ms ease;
+  }
+  .lang > summary::-webkit-details-marker {
+    display: none;
+  }
+  .lang > summary:hover,
+  .lang[open] > summary {
+    color: var(--color-ink);
+  }
+  .lang-panel {
+    position: absolute;
+    inset-inline: 1.5rem;
+    top: calc(100% + 0.5rem);
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(7.5rem, 1fr));
+    gap: 2px;
+    padding: 0.35rem;
+    border-radius: 6px;
+    background: var(--color-card);
+    box-shadow:
+      0 0 0 1px var(--color-rule),
+      0 18px 30px -16px rgb(0 0 0 / 0.8);
+  }
+  .lang-panel a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.65rem;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-ink-2);
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+  .lang-panel a:hover {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  .lang-panel a[aria-current='true'] {
+    color: var(--color-ink);
+  }
+  .lang-panel a[aria-current='true']::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--color-ink);
+  }
+  /* Flags: 4:3 symbols from the sprite in Flags.tsx. The hairline stops a
+     flag's white from bleeding into the card. This is the one place the page
+     shows colours outside its own palette. */
+  .flag {
+    flex: none;
+    width: 1.25rem;
+    aspect-ratio: 4 / 3;
+    border-radius: 2px;
+    outline: 1px solid rgb(255 255 255 / 0.12);
+    outline-offset: -1px;
+  }
+  .lang > summary .flag {
+    width: 1rem;
+  }
+  .lang-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  @media (width >= 40rem) {
+    .lang {
+      position: relative;
+    }
+    .lang-panel {
+      inset-inline: auto 0;
+    }
+  }
+
+  /* ---------- The boundary diagram ---------- */
+
+  .boundary-split {
+    position: relative;
+  }
+
+  .boundary-tag {
+    display: none;
+  }
+
+  @media (width >= 48rem) {
+    /* The divider is the boundary - the one place the seal colour appears
+       outside the hero. */
+    .boundary-split::before {
+      content: '';
+      position: absolute;
+      inset-block: -0.5rem;
+      left: calc(50% - 1px);
+      width: 2px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--color-seal) 14%,
+        var(--color-seal) 86%,
+        transparent
+      );
+    }
+
+    .boundary-tag {
+      position: absolute;
+      top: -2rem;
+      left: 50%;
+      display: block;
+      translate: -50% 0;
+      padding-inline: 0.55rem;
+      background: var(--color-paper);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--color-seal-ink);
+      white-space: nowrap;
+    }
+  }
+}
