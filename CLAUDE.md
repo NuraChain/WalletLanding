@@ -202,10 +202,11 @@ Search the tree for `TODO(content)`, `TODO(design)` and `TODO(deploy)`:
   `src/site.config.ts` is still null.
 - `TODO(design)` — `public/og.png` (1200x630) does not exist yet even though
   the Open Graph tags already point at it.
-- `TODO(deploy)` — Windows, Linux and Android link to the latest GitHub
-  release, Android also to Google Play. macOS and iOS have no build, so
-  their `href` in `siteConfig.platforms` is null and the row says so; set it
-  once those builds exist.
+- `TODO(deploy)` — Windows, Linux and Android link straight at their asset
+  in release `releaseTag` (`v1.2.3`) in `src/site.config.ts`, Android also to
+  Google Play; bump that tag and the file names together on every release.
+  macOS and iOS have no build, so their `href` in `siteConfig.platforms` is
+  null and the row says so; set it once those builds exist.
 
 Every product claim on the page traces to the Nura Wallet README. Do not add
 security claims beyond it — this is the page people use to decide whether to
