@@ -13,7 +13,7 @@ import { blogPath, postPath } from '../route'
 import { absoluteUrl, siteConfig } from '../site.config'
 import type { Post } from './types'
 
-const organization = { '@id': `${siteConfig.url}/#organization` }
+const organization = () => ({ '@id': absoluteUrl('/#organization') })
 
 function blogId(code: LocaleCode): string {
   return `${absoluteUrl(blogPath(code))}#blog`
@@ -47,7 +47,7 @@ export function blogGraph(locale: Locale, t: Content, posts: readonly Post[]): o
       name: t.blog.title,
       description: t.blog.description,
       inLanguage: locale.tag,
-      publisher: organization,
+      publisher: organization(),
       blogPost: posts.map((post) => ({
         '@type': 'BlogPosting',
         '@id': `${absoluteUrl(postPath(locale.code, post.slug))}#post`,
@@ -79,8 +79,8 @@ export function postGraph(locale: Locale, t: Content, post: Post): object[] {
       timeRequired: `PT${post.minutes}M`,
       isPartOf: { '@id': blogId(locale.code) },
       mainEntityOfPage: { '@id': `${url}#webpage` },
-      author: organization,
-      publisher: organization,
+      author: organization(),
+      publisher: organization(),
     },
     breadcrumbs(locale, t, post),
   ]

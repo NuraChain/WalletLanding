@@ -41,10 +41,16 @@ for that post.
 
 ## Configuration
 
-There is none to set up: the build takes no environment variables. The
-production domain is the `origin` constant at the top of `src/site.config.ts`,
-and it drives the canonical and hreflang URLs, Open Graph tags, JSON-LD, and
-the generated `robots.txt` and `sitemap.xml`.
+There is none, and there is no domain in the source. The build takes no
+environment variables: every absolute URL — canonical, hreflang, Open Graph,
+JSON-LD, `robots.txt`, `sitemap.xml` — is written with the placeholder origin
+`https://origin.invalid`, and nginx substitutes the live one on the way out.
+
+`deploy/nginx.conf` is the server block that does it; `server_name` there is the
+single place the domain is written. In a browser the page resolves its own
+origin from `location`, so JavaScript clients are right either way — the
+substitution is what crawlers that don't run JavaScript, `robots.txt` and
+`sitemap.xml` depend on.
 
 Copy lives in `src/i18n/` (one file per language, `en.ts` is the reference);
 the language list is `src/i18n/locales.ts`; identity and release links are in

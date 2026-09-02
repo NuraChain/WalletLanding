@@ -11,14 +11,19 @@
  */
 
 /**
- * Canonical origin, no trailing slash. Written down here rather than read
- * from the environment: there is one production domain, and a build that
- * picked up the wrong one would ship wrong canonicals, hreflang and sitemap
- * URLs without failing. vite.config.ts imports this file for robots.txt and
- * sitemap.xml, which is why nothing in it may touch Vite or browser globals.
- * TODO(deploy): change this line if the domain changes.
+ * The origin every absolute URL on this site is written with - and deliberately
+ * a placeholder, not the real domain. The site is served by nginx, and the host
+ * it answers on is nginx's to know, so the build bakes in no domain: nginx
+ * rewrites this string to the live origin on the way out (deploy/nginx.conf).
+ *
+ * It is a reserved `.invalid` name on purpose. A server that was never
+ * configured then fails visibly, instead of quietly pointing every canonical on
+ * the site at somebody else's domain.
+ *
+ * vite.config.ts imports it for robots.txt and sitemap.xml, which is why
+ * nothing in this file may touch Vite or browser globals at the top level.
  */
-const origin = 'https://nurawallet.app'
+export const ORIGIN_PLACEHOLDER = 'https://origin.invalid'
 
 const repository = 'https://github.com/NuraChain/Wallet'
 
@@ -35,8 +40,6 @@ const download = (asset: string) => `${repository}/releases/latest/download/${as
 
 export const siteConfig = {
   name: 'Nura Wallet',
-
-  url: origin,
 
   /** The app icon. Favicon, header mark and JSON-LD logo all point here. */
   icon: '/favicon.png',
@@ -91,7 +94,21 @@ export const siteConfig = {
   ],
 } as const
 
+/**
+ * The origin to write into this render's URLs. In a browser it is the host
+ * actually being served, whatever nginx answers as, so a JavaScript client is
+ * right whether or not the rewrite is configured. During the prerender there is
+ * no such host, so the placeholder goes in and nginx substitutes it later.
+ *
+ * `location` is read off `globalThis` rather than as a bare global because
+ * vite.config.ts type-checks this file without the DOM lib - and because during
+ * the render pass there is no DOM at all.
+ */
+function siteOrigin(): string {
+  return (globalThis as { location?: { origin: string } }).location?.origin ?? ORIGIN_PLACEHOLDER
+}
+
 /** Resolves a site-relative path to an absolute URL for meta tags. */
 export function absoluteUrl(path: string): string {
-  return new URL(path, `${siteConfig.url}/`).href
+  return new URL(path, `${siteOrigin()}/`).href
 }

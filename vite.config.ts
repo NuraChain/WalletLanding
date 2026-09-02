@@ -8,7 +8,7 @@ import type {} from 'vite-react-ssg'
 
 import { compilePost, markdown } from './plugins/markdown.ts'
 import { DEFAULT_LOCALE, type LocaleCode, localePath, locales } from './src/i18n/locales.ts'
-import { siteConfig } from './src/site.config.ts'
+import { ORIGIN_PLACEHOLDER } from './src/site.config.ts'
 
 /** Dev and preview both listen on this port. */
 const DEV_PORT = 4100
@@ -129,8 +129,9 @@ function sitemapEntries(buildDate: string): SitemapEntry[] {
 
 /**
  * Emits robots.txt and sitemap.xml at build time instead of checking them into
- * public/, so they take the canonical origin from siteConfig like the meta tags
- * do and cannot drift away from it.
+ * public/, so they carry the same placeholder origin the meta tags do and are
+ * rewritten by the same nginx rule. Both formats require absolute URLs, so
+ * neither can dodge the question by going relative.
  */
 function seoFiles(origin: string): Plugin {
   let isSsrBuild = false
@@ -185,7 +186,7 @@ function seoFiles(origin: string): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [markdown(), react(), tailwindcss(), seoFiles(siteConfig.url)],
+  plugins: [markdown(), react(), tailwindcss(), seoFiles(ORIGIN_PLACEHOLDER)],
 
   server: { port: DEV_PORT, strictPort: true },
   preview: { port: DEV_PORT, strictPort: true },

@@ -170,13 +170,26 @@ Markdown files, no admin panel, no database, in all ten languages:
   at the site root; only `WebPage` is per-page, and it is what carries this
   URL's language, title and image. Keeping per-page facts off the shared `@id`s
   is what stops the ten pages from merging into one contradictory entity.
-- The canonical origin is the `origin` constant at the top of
-  `src/site.config.ts` — one place, and not an environment variable, because a
-  build that picked up the wrong domain would ship wrong canonicals silently.
-  It feeds the meta tags _and_ the `robots.txt` / `sitemap.xml` that
-  `vite.config.ts` emits at build time; that config imports this file, so keep
-  it free of Vite and browser globals the way `locales.ts` is. Those two files
-  are generated, not checked in; don't add copies to `public/`.
+- **The domain is not in this repo.** The site is served by nginx, so the host
+  it answers on is nginx's to know. Every absolute URL — canonical, hreflang,
+  Open Graph, JSON-LD, and the `robots.txt` / `sitemap.xml` that
+  `vite.config.ts` emits at build time — is written with `ORIGIN_PLACEHOLDER`
+  from `src/site.config.ts`: `https://origin.invalid`, a reserved name, so a
+  server that was never configured fails visibly instead of pointing every
+  canonical at somebody else's site.
+  - `deploy/nginx.conf` rewrites it to `$scheme://$server_name` with
+    `sub_filter`. That is why the config names `text/xml` and `text/plain` in
+    `sub_filter_types` (the sitemap and robots.txt carry absolute URLs the
+    formats require) and why `gzip_static` must stay off — sub_filter cannot
+    rewrite a body it did not decompress.
+  - In the browser `absoluteUrl` resolves the origin from `location` instead,
+    read off `globalThis` because `vite.config.ts` type-checks this file without
+    the DOM lib. So JavaScript clients are correct regardless; the rewrite is
+    for the crawlers that never run it.
+  - `vite.config.ts` imports `src/site.config.ts`, so keep that file free of
+    Vite and browser globals at the top level, the way `locales.ts` is.
+  - `robots.txt` and `sitemap.xml` are generated, not checked in; don't add
+    copies to `public/`.
 - The blog adds `Blog`, `BlogPosting` and `BreadcrumbList` nodes
   (`src/blog/schema.ts`), appended to that same graph through `<Seo graph>`.
   A post page is `og:type=article` and carries `article:published_time`.

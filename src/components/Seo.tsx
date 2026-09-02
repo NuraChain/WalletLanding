@@ -70,7 +70,7 @@ export function Seo({ title, description, type = 'website', published, graph = [
     '@graph': [
       {
         '@type': 'Organization',
-        '@id': `${siteConfig.url}/#organization`,
+        '@id': absoluteUrl('/#organization'),
         name: siteConfig.name,
         url: absoluteUrl('/'),
         logo: absoluteUrl(siteConfig.icon),
@@ -78,7 +78,7 @@ export function Seo({ title, description, type = 'website', published, graph = [
       },
       {
         '@type': 'SoftwareApplication',
-        '@id': `${siteConfig.url}/#app`,
+        '@id': absoluteUrl('/#app'),
         name: siteConfig.name,
         url: absoluteUrl('/'),
         applicationCategory: 'FinanceApplication',
@@ -91,15 +91,15 @@ export function Seo({ title, description, type = 'website', published, graph = [
         isAccessibleForFree: true,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         inLanguage: languages,
-        publisher: { '@id': `${siteConfig.url}/#organization` },
+        publisher: { '@id': absoluteUrl('/#organization') },
       },
       {
         '@type': 'WebSite',
-        '@id': `${siteConfig.url}/#website`,
+        '@id': absoluteUrl('/#website'),
         name: siteConfig.name,
         url: absoluteUrl('/'),
         inLanguage: languages,
-        publisher: { '@id': `${siteConfig.url}/#organization` },
+        publisher: { '@id': absoluteUrl('/#organization') },
       },
       {
         '@type': 'WebPage',
@@ -108,8 +108,8 @@ export function Seo({ title, description, type = 'website', published, graph = [
         name: title,
         description,
         inLanguage: locale.tag,
-        isPartOf: { '@id': `${siteConfig.url}/#website` },
-        about: { '@id': `${siteConfig.url}/#app` },
+        isPartOf: { '@id': absoluteUrl('/#website') },
+        about: { '@id': absoluteUrl('/#app') },
         primaryImageOfPage: ogImage,
       },
       ...graph,
