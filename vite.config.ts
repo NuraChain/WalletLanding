@@ -5,6 +5,9 @@ import type {} from 'vite-react-ssg'
 
 import { DEFAULT_LOCALE, localePath, locales } from './src/i18n/locales.ts'
 
+/** Dev and preview both listen here, so the localhost origin is one number. */
+const DEV_PORT = 9500
+
 /** Routes prerendered to static HTML and listed in the sitemap: one per language. */
 const ROUTES = locales.map((locale) => localePath(locale.code))
 
@@ -93,10 +96,13 @@ function seoFiles(origin: string): Plugin {
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
-  const origin = (env.VITE_SITE_URL || 'http://localhost:5173').replace(/\/+$/, '')
+  const origin = (env.VITE_SITE_URL || `http://localhost:${DEV_PORT}`).replace(/\/+$/, '')
 
   return {
     plugins: [react(), tailwindcss(), seoFiles(origin)],
+
+    server: { port: DEV_PORT, strictPort: true },
+    preview: { port: DEV_PORT, strictPort: true },
 
     // vite-react-ssg: prerender the app to static HTML so crawlers that don't
     // run JavaScript still receive the full page. The route list comes from

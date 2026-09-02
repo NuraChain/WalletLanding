@@ -15,7 +15,7 @@ npm run dev
 ```
 
 The dev server serves every language from the same SPA: open
-`http://localhost:5173/fa/` for Persian.
+`http://localhost:9500/fa/` for Persian.
 
 ## Scripts
 
