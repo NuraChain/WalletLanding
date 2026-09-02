@@ -26,7 +26,7 @@ export const siteConfig = {
   name: 'Nura Wallet',
 
   /** Canonical origin, no trailing slash. Set per environment in .env. */
-  url: (import.meta.env.VITE_SITE_URL || 'http://localhost:9500').replace(/\/+$/, ''),
+  url: (import.meta.env.VITE_SITE_URL || 'http://localhost:4100').replace(/\/+$/, ''),
 
   /** The app icon. Favicon, header mark and JSON-LD logo all point here. */
   icon: '/favicon.png',

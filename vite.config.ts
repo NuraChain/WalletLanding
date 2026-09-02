@@ -10,7 +10,7 @@ import { compilePost, markdown } from './plugins/markdown.ts'
 import { DEFAULT_LOCALE, type LocaleCode, localePath, locales } from './src/i18n/locales.ts'
 
 /** Dev and preview both listen here, so the localhost origin is one number. */
-const DEV_PORT = 9500
+const DEV_PORT = 4100
 
 const BLOG_DIR = 'src/content/blog'
 
