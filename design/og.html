@@ -1,0 +1,221 @@
+<!doctype html>
+<!--
+  Source for public/og.png, the 1200x630 social card.
+
+  It is a page, not a drawing, so it stays in the site's own type and colours
+  and can be re-rendered whenever the headline or the platform list changes -
+  both appear here as text and would otherwise go stale.
+
+  To re-render, from the repo root:
+
+      npx serve . -l 9611          # or any static server
+      # open http://localhost:9611/design/og.html at exactly 1200x630
+      # and save the viewport screenshot to public/og.png
+
+  The body is fixed at 1200x630, so a viewport screenshot is the whole card.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=block"
+    />
+    <style>
+      :root {
+        --paper: #070b12;
+        --rule: #1b2431;
+        --ink: #f2f5f9;
+        --ink-2: #8a97ab;
+        --slab: #131a25;
+        --slab-hi: #222c3a;
+        --seal: #22b8f5;
+        --seal-ink: #4fc5f7;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+      }
+      body {
+        position: relative;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: 'Archivo', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* Measurement grid, same idea as the hero scene's back plane. */
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          repeating-linear-gradient(
+            to right,
+            rgba(242, 245, 249, 0.055) 0 1px,
+            transparent 1px 60px
+          ),
+          repeating-linear-gradient(
+            to bottom,
+            rgba(242, 245, 249, 0.055) 0 1px,
+            transparent 1px 60px
+          );
+        mask-image: radial-gradient(120% 100% at 78% 42%, #000 0%, transparent 72%);
+      }
+      /* The seal boundary ring: the one blue idea, held to one job. */
+      .ring {
+        position: absolute;
+        top: 50%;
+        right: -170px;
+        width: 620px;
+        height: 620px;
+        transform: translateY(-50%);
+        border: 1px solid rgba(34, 184, 245, 0.34);
+        border-radius: 50%;
+        box-shadow: 0 0 120px rgba(34, 184, 245, 0.14) inset;
+      }
+      .ring::after {
+        content: '';
+        position: absolute;
+        inset: 78px;
+        border: 1px solid rgba(34, 184, 245, 0.16);
+        border-radius: 50%;
+      }
+      .chip {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 188px;
+        height: 188px;
+        transform: translate(-50%, -50%) rotate(-17deg);
+        border: 1px solid var(--slab-hi);
+        border-radius: 26px;
+        background: linear-gradient(150deg, var(--slab) 0%, #0b1119 100%);
+        box-shadow:
+          0 0 0 1px rgba(34, 184, 245, 0.22),
+          0 40px 80px rgba(0, 0, 0, 0.55);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .chip .dot {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: var(--seal);
+        box-shadow: 0 0 26px var(--seal);
+      }
+      .chip .txt {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--seal-ink);
+      }
+      .frame {
+        position: absolute;
+        inset: 0;
+        padding: 64px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .brand img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+      }
+      .brand span {
+        font-weight: 800;
+        font-stretch: 112%;
+        font-size: 30px;
+        letter-spacing: -0.018em;
+      }
+      .brand span i {
+        font-style: normal;
+        color: var(--ink-2);
+      }
+      .eyebrow {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 15px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-2);
+        margin-bottom: 22px;
+      }
+      h1 {
+        max-width: 720px;
+        font-weight: 800;
+        font-stretch: 112%;
+        font-size: 76px;
+        line-height: 1.02;
+        letter-spacing: -0.032em;
+      }
+      .foot {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 16px;
+        color: var(--ink-2);
+      }
+      .foot .sep {
+        width: 1px;
+        height: 17px;
+        background: var(--rule);
+      }
+      .foot .seal {
+        color: var(--seal-ink);
+      }
+      .hair {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 4px;
+        background: linear-gradient(to right, var(--seal) 0%, rgba(34, 184, 245, 0) 46%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid"></div>
+    <div class="ring">
+      <div class="chip">
+        <div class="dot"></div>
+        <div class="txt">Sealed</div>
+      </div>
+    </div>
+    <div class="frame">
+      <div class="brand">
+        <img src="../public/favicon.png" alt="" />
+        <span>Nura<i> Wallet</i></span>
+      </div>
+      <div>
+        <div class="eyebrow">Self-custodial · Ethereum</div>
+        <h1>Your keys never leave the device.</h1>
+      </div>
+      <div class="foot">
+        <span class="seal">AES-GCM + Argon2id</span>
+        <span class="sep"></span>
+        <span>MIT licensed</span>
+        <span class="sep"></span>
+        <span>Windows · Linux · Android</span>
+      </div>
+    </div>
+    <div class="hair"></div>
+  </body>
+</html>

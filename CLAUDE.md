@@ -118,11 +118,19 @@ client-side language state.
 
 ## SEO
 
+- `public/og.png` (1200x630) is the social card. It is a rendered screenshot,
+  not a hand-drawn asset: the source page is `design/og.html`, opened at
+  1200x630 and captured. Re-render it if the headline or the platform list
+  changes, since it repeats them as text.
 - `src/site.config.ts` holds what is the same in every language: brand name,
   canonical origin, icon, social image, repository, platform list. Title and
   description are per language, in the content files. `Seo.tsx` turns both
   into head tags (Open Graph, Twitter card, canonical, hreflang, JSON-LD
-  `Organization` + `SoftwareApplication` + `WebSite`).
+  `Organization` + `SoftwareApplication` + `WebSite` + `WebPage`). The first
+  three describe the site, are byte-identical on all ten pages and point `url`
+  at the site root; only `WebPage` is per-page, and it is what carries this
+  URL's language, title and image. Keeping per-page facts off the shared `@id`s
+  is what stops the ten pages from merging into one contradictory entity.
 - The canonical origin comes from `VITE_SITE_URL` in `.env` — one place. It
   feeds the meta tags _and_ the `robots.txt` / `sitemap.xml` that
   `vite.config.ts` emits at build time. Those two files are generated, not
@@ -200,8 +208,6 @@ Search the tree for `TODO(content)`, `TODO(design)` and `TODO(deploy)`:
   README names only Windows and Android — reconcile them.
   The nine translations need a native-speaker pass. `twitterHandle` in
   `src/site.config.ts` is still null.
-- `TODO(design)` — `public/og.png` (1200x630) does not exist yet even though
-  the Open Graph tags already point at it.
 - `TODO(deploy)` — Windows, Linux and Android download their asset straight
   from `/releases/latest/download/<file>`, so they follow the newest release on
   their own as long as the asset file names don't change; Android also links to
