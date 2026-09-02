@@ -9,6 +9,17 @@
  * claims that aren't in the source - this is the page people decide whether to
  * trust their keys to.
  */
+
+/**
+ * Canonical origin, no trailing slash. Written down here rather than read
+ * from the environment: there is one production domain, and a build that
+ * picked up the wrong one would ship wrong canonicals, hreflang and sitemap
+ * URLs without failing. vite.config.ts imports this file for robots.txt and
+ * sitemap.xml, which is why nothing in it may touch Vite or browser globals.
+ * TODO(deploy): change this line if the domain changes.
+ */
+const origin = 'https://nurawallet.app'
+
 const repository = 'https://github.com/NuraChain/Wallet'
 
 /** The latest GitHub release: one page with every build attached. */
@@ -25,8 +36,7 @@ const download = (asset: string) => `${repository}/releases/latest/download/${as
 export const siteConfig = {
   name: 'Nura Wallet',
 
-  /** Canonical origin, no trailing slash. Set per environment in .env. */
-  url: (import.meta.env.VITE_SITE_URL || 'http://localhost:4100').replace(/\/+$/, ''),
+  url: origin,
 
   /** The app icon. Favicon, header mark and JSON-LD logo all point here. */
   icon: '/favicon.png',

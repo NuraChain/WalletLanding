@@ -3,13 +3,14 @@ import { join } from 'node:path'
 
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig, loadEnv, type Plugin } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import type {} from 'vite-react-ssg'
 
 import { compilePost, markdown } from './plugins/markdown.ts'
 import { DEFAULT_LOCALE, type LocaleCode, localePath, locales } from './src/i18n/locales.ts'
+import { siteConfig } from './src/site.config.ts'
 
-/** Dev and preview both listen here, so the localhost origin is one number. */
+/** Dev and preview both listen on this port. */
 const DEV_PORT = 4100
 
 const BLOG_DIR = 'src/content/blog'
@@ -128,7 +129,8 @@ function sitemapEntries(buildDate: string): SitemapEntry[] {
 
 /**
  * Emits robots.txt and sitemap.xml at build time instead of checking them into
- * public/, so the canonical origin lives only in VITE_SITE_URL and can't drift.
+ * public/, so they take the canonical origin from siteConfig like the meta tags
+ * do and cannot drift away from it.
  */
 function seoFiles(origin: string): Plugin {
   let isSsrBuild = false
@@ -182,24 +184,19 @@ function seoFiles(origin: string): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), 'VITE_')
-  const origin = (env.VITE_SITE_URL || `http://localhost:${DEV_PORT}`).replace(/\/+$/, '')
+export default defineConfig({
+  plugins: [markdown(), react(), tailwindcss(), seoFiles(siteConfig.url)],
 
-  return {
-    plugins: [markdown(), react(), tailwindcss(), seoFiles(origin)],
+  server: { port: DEV_PORT, strictPort: true },
+  preview: { port: DEV_PORT, strictPort: true },
 
-    server: { port: DEV_PORT, strictPort: true },
-    preview: { port: DEV_PORT, strictPort: true },
-
-    // vite-react-ssg: prerender the app to static HTML so crawlers that don't
-    // run JavaScript still receive the full page. The route list comes from
-    // `includedRoutes` in src/main.tsx (one page per language, plus the blog).
-    ssgOptions: {
-      entry: 'src/main.tsx',
-      dirStyle: 'nested',
-      // Inline the CSS the first viewport needs; defer the rest. Helps LCP.
-      beastiesOptions: { preload: 'swap' },
-    },
-  }
+  // vite-react-ssg: prerender the app to static HTML so crawlers that don't
+  // run JavaScript still receive the full page. The route list comes from
+  // `includedRoutes` in src/main.tsx (one page per language, plus the blog).
+  ssgOptions: {
+    entry: 'src/main.tsx',
+    dirStyle: 'nested',
+    // Inline the CSS the first viewport needs; defer the rest. Helps LCP.
+    beastiesOptions: { preload: 'swap' },
+  },
 })

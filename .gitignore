@@ -23,8 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# Local env overrides (the committed .env holds only the public site URL)
-.env*.local
+# Env files. The site has no build-time configuration; nothing here is needed.
+.env*
 
 # vite-react-ssg build scratch
 .vite-react-ssg-temp

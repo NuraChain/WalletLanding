@@ -170,10 +170,13 @@ Markdown files, no admin panel, no database, in all ten languages:
   at the site root; only `WebPage` is per-page, and it is what carries this
   URL's language, title and image. Keeping per-page facts off the shared `@id`s
   is what stops the ten pages from merging into one contradictory entity.
-- The canonical origin comes from `VITE_SITE_URL` in `.env` — one place. It
-  feeds the meta tags _and_ the `robots.txt` / `sitemap.xml` that
-  `vite.config.ts` emits at build time. Those two files are generated, not
-  checked in; don't add copies to `public/`.
+- The canonical origin is the `origin` constant at the top of
+  `src/site.config.ts` — one place, and not an environment variable, because a
+  build that picked up the wrong domain would ship wrong canonicals silently.
+  It feeds the meta tags _and_ the `robots.txt` / `sitemap.xml` that
+  `vite.config.ts` emits at build time; that config imports this file, so keep
+  it free of Vite and browser globals the way `locales.ts` is. Those two files
+  are generated, not checked in; don't add copies to `public/`.
 - The blog adds `Blog`, `BlogPosting` and `BreadcrumbList` nodes
   (`src/blog/schema.ts`), appended to that same graph through `<Seo graph>`.
   A post page is `og:type=article` and carries `article:published_time`.

@@ -41,14 +41,10 @@ for that post.
 
 ## Configuration
 
-Set the production domain in `.env`:
-
-```
-VITE_SITE_URL=https://your-domain.com
-```
-
-It drives the canonical and hreflang URLs, Open Graph tags, JSON-LD, and the
-generated `robots.txt` and `sitemap.xml`.
+There is none to set up: the build takes no environment variables. The
+production domain is the `origin` constant at the top of `src/site.config.ts`,
+and it drives the canonical and hreflang URLs, Open Graph tags, JSON-LD, and
+the generated `robots.txt` and `sitemap.xml`.
 
 Copy lives in `src/i18n/` (one file per language, `en.ts` is the reference);
 the language list is `src/i18n/locales.ts`; identity and release links are in
