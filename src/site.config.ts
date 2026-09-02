@@ -15,14 +15,12 @@ const repository = 'https://github.com/NuraChain/Wallet'
 const releases = `${repository}/releases/latest`
 
 /**
- * The release the download buttons point at. The platform links below are
- * direct asset URLs, so this tag and the file names have to be bumped together
- * whenever a new release ships.
+ * A build, by its asset file name. `/releases/latest/download/` redirects to
+ * that asset in whatever the newest release is, so nothing here is pinned to a
+ * version - but the file names must stay stable from release to release, or
+ * the link 404s.
  */
-const releaseTag = 'v1.2.3'
-
-/** A build attached to that release, by its asset file name. */
-const download = (asset: string) => `${repository}/releases/download/${releaseTag}/${asset}`
+const download = (asset: string) => `${repository}/releases/latest/download/${asset}`
 
 export const siteConfig = {
   name: 'Nura Wallet',
@@ -46,7 +44,7 @@ export const siteConfig = {
 
   /**
    * Release targets, in page order. OS names are not translated. `href` is the
-   * build itself - a direct asset download from the release named above for
+   * build itself - a direct download of that asset from the latest release for
    * the three that exist - and null where there is no build yet, which the page
    * says outright instead of linking nowhere. `store` is an app-store listing,
    * offered first when there is one. `icon` names a mark in
