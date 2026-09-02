@@ -177,11 +177,14 @@ Markdown files, no admin panel, no database, in all ten languages:
   from `src/site.config.ts`: `https://origin.invalid`, a reserved name, so a
   server that was never configured fails visibly instead of pointing every
   canonical at somebody else's site.
-  - `deploy/nginx.conf` rewrites it to `$scheme://$server_name` with
-    `sub_filter`. That is why the config names `text/xml` and `text/plain` in
-    `sub_filter_types` (the sitemap and robots.txt carry absolute URLs the
-    formats require) and why `gzip_static` must stay off — sub_filter cannot
-    rewrite a body it did not decompress.
+  - nginx replaces it with `sub_filter`, and the server config is not in this
+    repo. What that config has to get right, because the build depends on it:
+    `sub_filter_types` must name `text/xml` and `text/plain` as well as the
+    default `text/html`, since the sitemap and robots.txt carry absolute URLs
+    the formats require; `sub_filter_once` must be off, since a page holds
+    dozens of them; the replacement should be `$scheme://$server_name` rather
+    than `$host`, which is client-supplied; and `gzip_static` must stay off,
+    since sub_filter cannot rewrite a body it did not decompress.
   - In the browser `absoluteUrl` resolves the origin from `location` instead,
     read off `globalThis` because `vite.config.ts` type-checks this file without
     the DOM lib. So JavaScript clients are correct regardless; the rewrite is

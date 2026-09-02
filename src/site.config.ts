@@ -14,7 +14,7 @@
  * The origin every absolute URL on this site is written with - and deliberately
  * a placeholder, not the real domain. The site is served by nginx, and the host
  * it answers on is nginx's to know, so the build bakes in no domain: nginx
- * rewrites this string to the live origin on the way out (deploy/nginx.conf).
+ * rewrites this string to the live origin on the way out - see the README.
  *
  * It is a reserved `.invalid` name on purpose. A server that was never
  * configured then fails visibly, instead of quietly pointing every canonical on

@@ -46,11 +46,22 @@ environment variables: every absolute URL — canonical, hreflang, Open Graph,
 JSON-LD, `robots.txt`, `sitemap.xml` — is written with the placeholder origin
 `https://origin.invalid`, and nginx substitutes the live one on the way out.
 
-`deploy/nginx.conf` is the server block that does it; `server_name` there is the
-single place the domain is written. In a browser the page resolves its own
-origin from `location`, so JavaScript clients are right either way — the
-substitution is what crawlers that don't run JavaScript, `robots.txt` and
-`sitemap.xml` depend on.
+In a browser the page resolves its own origin from `location`, so JavaScript
+clients are right either way. The substitution is what crawlers that don't run
+JavaScript, `robots.txt` and `sitemap.xml` depend on. In the server block:
+
+```nginx
+sub_filter_types text/xml text/plain;   # sitemap.xml and robots.txt too
+sub_filter       'https://origin.invalid' '$scheme://$server_name';
+sub_filter_once  off;                   # dozens per page
+gzip_static      off;                   # sub_filter can't rewrite a .gz
+```
+
+`$server_name`, not `$host`: `$host` is a client-supplied header, and a
+canonical URL built from one is worth nothing. Needs `ngx_http_sub_module`
+(`nginx -V 2>&1 | grep -o with-http_sub_module`) — present in the nginx.org
+packages, Debian/Ubuntu `nginx-full` and `nginx-extras`, and Alpine, but not in
+Debian's `nginx-light`.
 
 Copy lives in `src/i18n/` (one file per language, `en.ts` is the reference);
 the language list is `src/i18n/locales.ts`; identity and release links are in
