@@ -23,7 +23,7 @@
  * vite.config.ts imports it for robots.txt and sitemap.xml, which is why
  * nothing in this file may touch Vite or browser globals at the top level.
  */
-export const ORIGIN_PLACEHOLDER = 'https://origin.invalid'
+export const ORIGIN_PLACEHOLDER = 'https://nurawallet.app'
 
 const repository = 'https://github.com/NuraChain/Wallet'
 

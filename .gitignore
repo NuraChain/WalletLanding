@@ -31,3 +31,4 @@ dist-ssr
 
 # Local visual-review artifacts
 .playwright-mcp/
+artifacts/

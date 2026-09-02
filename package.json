@@ -7,12 +7,21 @@
     "dev": "vite",
     "build": "tsc -b && vite-react-ssg build",
     "preview": "vite preview",
+    "serve": "node scripts/serve.mjs",
     "typecheck": "tsc -b",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "check": "npm run typecheck && npm run lint && npm run format:check"
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "qa:visual": "node scripts/visual-qa.mjs",
+    "service:install": "bash scripts/service-install.sh",
+    "service:start": "bash scripts/service-start.sh",
+    "service:stop": "bash scripts/service-stop.sh",
+    "service:restart": "bash scripts/service-restart.sh",
+    "service:status": "bash scripts/service-status.sh",
+    "service:deploy": "npm run build && npm run service:restart",
+    "service:uninstall": "bash scripts/service-uninstall.sh"
   },
   "dependencies": {
     "react": "^19.2.8",
@@ -20,6 +29,7 @@
     "vite-react-ssg": "^0.9.2"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
@@ -28,6 +38,7 @@
     "beasties": "^0.1.0",
     "oxfmt": "^0.65.0",
     "oxlint": "^1.80.0",
+    "playwright": "^1.56.1",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.2.2"

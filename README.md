@@ -38,6 +38,29 @@ for that post.
 - `npm run preview` — serve the built output
 - `npm run check` — typecheck + lint + format check
 - `npm run lint:fix` / `npm run format` — apply fixes
+- `npm run qa:visual` — screenshots, overflow and axe checks across three
+  viewports, both directions and all three page shapes, against a server that is
+  already running. Point it at `npm run preview`, not `npm run dev`: the dev
+  server ships an unprerendered SPA, so the regression this build exists to
+  prevent cannot show up there. Needs `npx playwright install chromium` once.
+
+## Deployment
+
+`npm run serve` runs `scripts/serve.mjs`, a dependency-free static server for
+`dist/`, on `127.0.0.1:4100`. It does not compress, deliberately — nginx does
+that, and nginx's `sub_filter` cannot rewrite a body it did not decompress.
+
+The `service:*` scripts wrap a systemd unit that runs it:
+
+```sh
+npm run build
+sudo npm run service:install      # writes /etc/systemd/system/wallet-landing.service
+npm run service:deploy            # rebuild and restart
+npm run service:status            # also: start, stop, restart, uninstall
+```
+
+If nginx serves `dist/` from disk instead of proxying, none of that is needed —
+only the `sub_filter` rules above.
 
 ## Configuration
 

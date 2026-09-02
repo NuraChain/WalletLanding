@@ -13,6 +13,9 @@ in ten languages.
 | `npm run lint` / `lint:fix`       | oxlint                                                              |
 | `npm run format` / `format:check` | oxfmt                                                               |
 | `npm run typecheck`               | `tsc -b`                                                            |
+| `npm run serve`                   | `scripts/serve.mjs` — static `dist/` server on 127.0.0.1:4100       |
+| `npm run qa:visual`               | Playwright + axe over a running server (see README)                 |
+| `npm run service:*`               | systemd unit `wallet-landing`, running `serve.mjs` behind nginx     |
 | `npm run check`                   | typecheck + lint + format:check — run this before calling work done |
 
 ## Stack
