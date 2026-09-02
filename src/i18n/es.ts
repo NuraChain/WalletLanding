@@ -119,4 +119,20 @@ export const es: Content = {
     license: 'Licencia MIT',
     languages: 'Idiomas',
   },
+
+  blog: {
+    nav: 'Notas',
+    title: 'Notas — Nura Wallet',
+    description:
+      'Explicaciones breves y claras sobre autocustodia, frase de recuperación, firma, gas y tokens, de quienes desarrollan Nura Wallet.',
+    eyebrow: 'Notas',
+    headline: 'Cómo funciona de verdad lo que llevas en el bolsillo.',
+    intro:
+      'La autocustodia te pide guardar algo valioso. Estas son las piezas que conviene entender antes — en lenguaje claro, una idea cada vez.',
+    readMore: 'Leer',
+    readingTime: (minutes) => `${minutes} min de lectura`,
+    published: 'Publicado',
+    backToBlog: 'Todas las notas',
+    more: 'Más notas',
+  },
 }

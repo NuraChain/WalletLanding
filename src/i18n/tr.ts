@@ -115,4 +115,20 @@ export const tr: Content = {
     license: 'MIT Lisansı',
     languages: 'Diller',
   },
+
+  blog: {
+    nav: 'Notlar',
+    title: 'Notlar — Nura Wallet',
+    description:
+      'Kendi saklamanız, kurtarma ifadesi, imzalama, gas ve tokenler üzerine kısa ve açık anlatımlar — Nura Wallet’ı geliştirenlerden.',
+    eyebrow: 'Notlar',
+    headline: 'Cebinizdeki şey gerçekte nasıl çalışıyor.',
+    intro:
+      'Kendi saklamanız, değerli bir şeyi kendinizin tutmasını ister. Bunlar, ondan önce anlaşılmaya değer parçalar — sade bir dille, her seferinde tek bir fikir.',
+    readMore: 'Oku',
+    readingTime: (minutes) => `${minutes} dk okuma`,
+    published: 'Yayımlandı',
+    backToBlog: 'Tüm notlar',
+    more: 'Diğer notlar',
+  },
 }

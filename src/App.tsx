@@ -11,11 +11,13 @@ import { content } from './i18n'
 import { LocaleContext } from './i18n/context'
 import type { Locale } from './i18n/locales'
 
-/** The whole page, in one language. */
+/** The landing page, in one language. */
 export default function App({ locale }: { locale: Locale }) {
+  const t = content[locale.code]
+
   return (
-    <LocaleContext value={{ locale, t: content[locale.code] }}>
-      <Seo />
+    <LocaleContext value={{ locale, t, route: { kind: 'home', locale } }}>
+      <Seo title={t.meta.title} description={t.meta.description} />
       <SiteHeader />
       <main>
         <Hero />

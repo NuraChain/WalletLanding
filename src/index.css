@@ -557,3 +557,140 @@
     }
   }
 }
+
+@layer components {
+  /* ---------- Post body ---------- */
+
+  /*
+    The one place on the site with running text, so it is also the one place
+    that needs typographic defaults rather than utilities: the markdown is
+    compiled to plain HTML at build time (plugins/markdown.ts) and lands here
+    without classes.
+
+    Everything is a logical property, so Persian and Arabic mirror for free.
+    Links are underlined ink, never the seal blue - that colour still means
+    exactly one thing on this site.
+  */
+  .prose {
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
+
+  .prose > * + * {
+    margin-block-start: 1.35rem;
+  }
+
+  .prose h2,
+  .prose h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: var(--tracking-display);
+    line-height: 1.15;
+    color: var(--color-ink);
+    scroll-margin-block-start: 6rem;
+  }
+
+  .prose h2 {
+    margin-block-start: 3.25rem;
+    font-size: 1.6rem;
+  }
+
+  .prose h3 {
+    margin-block-start: 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  .prose strong {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .prose a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 160ms ease;
+  }
+  .prose a:hover {
+    text-decoration-color: var(--color-ink);
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-inline-start: 1.4rem;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li::marker {
+    color: var(--color-rule);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+  .prose li + li {
+    margin-block-start: 0.6rem;
+  }
+
+  .prose blockquote {
+    border-inline-start: 2px solid var(--color-seal);
+    padding-inline-start: 1.15rem;
+    color: var(--color-ink);
+  }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 0.15em 0.35em;
+    border-radius: 3px;
+    background: var(--color-card);
+    box-shadow: inset 0 0 0 1px var(--color-rule);
+    color: var(--color-ink);
+  }
+
+  /* Wide code has to scroll inside its own box; the page never does. */
+  .prose pre {
+    overflow-x: auto;
+    padding: 1rem 1.15rem;
+    border-radius: 6px;
+    background: var(--color-card);
+    box-shadow: inset 0 0 0 1px var(--color-rule);
+    /* Code is code, in every language. */
+    direction: ltr;
+    text-align: start;
+  }
+  .prose pre code {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+  }
+
+  .prose hr {
+    margin-block: 2.5rem;
+    border: 0;
+    border-block-start: 1px solid var(--color-rule);
+  }
+}
+
+@layer components {
+  /*
+    One link, the size of its row. The anchor names the row for assistive
+    technology; the pseudo-element gives a pointer the whole row to hit
+    without wrapping unrelated text in the link.
+  */
+  .link-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+}

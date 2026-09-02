@@ -48,4 +48,22 @@ export type Content = {
   }
   source: { eyebrow: string; headline: string; body: string; cta: string }
   footer: { tagline: string; repository: string; license: string; languages: string }
+  /**
+   * The blog's own chrome. The posts themselves are markdown files under
+   * src/content/blog/<slug>/<lang>.md, not strings here.
+   */
+  blog: {
+    /** Label of the link to the blog, in the header and the footer. */
+    nav: string
+    title: string
+    description: string
+    eyebrow: string
+    headline: string
+    intro: string
+    readMore: string
+    readingTime: (minutes: number) => string
+    published: string
+    backToBlog: string
+    more: string
+  }
 }

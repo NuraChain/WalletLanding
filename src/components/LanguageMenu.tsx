@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
 
 import { useLocale } from '../i18n/context'
-import { localePath, locales } from '../i18n/locales'
+import { locales } from '../i18n/locales'
+import { fallbackPathIn, pathIn } from '../route'
 import { Flag, FlagSprite } from './Flags'
 
 /**
@@ -13,10 +14,12 @@ import { Flag, FlagSprite } from './Flags'
  * <FlagSprite /> renders once here. The flag is decoration: the language's
  * own name is the label.
  *
- * Each translation is its own directory, so switching is a real navigation.
+ * Each translation is its own directory, so switching is a real navigation -
+ * to the same page in the other language, or, for a post that language does
+ * not have, to its blog index rather than a URL that was never written.
  */
 export function LanguageMenu() {
-  const { locale, t } = useLocale()
+  const { locale, t, route } = useLocale()
   const ref = useRef<HTMLDetailsElement>(null)
 
   useEffect(() => {
@@ -54,8 +57,8 @@ export function LanguageMenu() {
           {locales.map((item) => (
             <li key={item.code}>
               <a
-                href={localePath(item.code)}
-                hrefLang={item.tag}
+                href={fallbackPathIn(route, item.code)}
+                hrefLang={pathIn(route, item.code) ? item.tag : undefined}
                 lang={item.tag}
                 aria-current={item.code === locale.code ? 'true' : undefined}
               >

@@ -123,4 +123,20 @@ export const en: Content = {
     license: 'MIT License',
     languages: 'Languages',
   },
+
+  blog: {
+    nav: 'Notes',
+    title: 'Notes — Nura Wallet',
+    description:
+      'Short, plain explanations of self-custody, recovery phrases, signing, gas and tokens — from the people who build Nura Wallet.',
+    eyebrow: 'Notes',
+    headline: 'How the thing in your pocket actually works.',
+    intro:
+      'Self-custody asks you to hold something valuable. These are the pieces worth understanding before you do — written plainly, one idea at a time.',
+    readMore: 'Read',
+    readingTime: (minutes) => `${minutes} min read`,
+    published: 'Published',
+    backToBlog: 'All notes',
+    more: 'More notes',
+  },
 }

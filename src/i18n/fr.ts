@@ -120,4 +120,20 @@ export const fr: Content = {
     license: 'Licence MIT',
     languages: 'Langues',
   },
+
+  blog: {
+    nav: 'Notes',
+    title: 'Notes — Nura Wallet',
+    description:
+      'Explications courtes et claires sur l’auto-conservation, la phrase de récupération, la signature, le gas et les jetons, par ceux qui développent Nura Wallet.',
+    eyebrow: 'Notes',
+    headline: 'Comment fonctionne vraiment ce que vous avez en poche.',
+    intro:
+      'L’auto-conservation vous demande de garder vous-même quelque chose de précieux. Voici ce qu’il vaut mieux comprendre avant — en langage clair, une idée à la fois.',
+    readMore: 'Lire',
+    readingTime: (minutes) => `${minutes} min de lecture`,
+    published: 'Publié le',
+    backToBlog: 'Toutes les notes',
+    more: 'Autres notes',
+  },
 }

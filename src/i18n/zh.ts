@@ -104,4 +104,19 @@ export const zh: Content = {
     license: 'MIT 许可证',
     languages: '语言',
   },
+
+  blog: {
+    nav: '笔记',
+    title: '笔记 — Nura Wallet',
+    description: '关于自我保管、助记词、签名、Gas 与代币的简短说明，来自 Nura Wallet 的开发者。',
+    eyebrow: '笔记',
+    headline: '口袋里的这个东西，究竟是怎么运作的。',
+    intro:
+      '自我保管要求你亲自保管贵重的东西。这些是在那之前值得先弄清楚的部分 — 用平实的语言，一次讲一件事。',
+    readMore: '阅读',
+    readingTime: (minutes) => `阅读约 ${minutes} 分钟`,
+    published: '发布于',
+    backToBlog: '全部笔记',
+    more: '更多笔记',
+  },
 }

@@ -1,9 +1,11 @@
+import { hasBlog } from '../blog/posts'
 import { useLocale } from '../i18n/context'
-import { localePath, locales } from '../i18n/locales'
+import { locales } from '../i18n/locales'
+import { blogPath, fallbackPathIn, pathIn } from '../route'
 import { siteConfig } from '../site.config'
 
 export function SiteFooter() {
-  const { locale, t } = useLocale()
+  const { locale, t, route } = useLocale()
 
   return (
     <footer className="border-t border-rule">
@@ -11,6 +13,11 @@ export function SiteFooter() {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <p>{t.footer.tagline}</p>
           <p className="flex items-center gap-5">
+            {hasBlog(locale.code) ? (
+              <a className="transition-colors hover:text-ink" href={blogPath(locale.code)}>
+                {t.blog.nav}
+              </a>
+            ) : null}
             <a
               className="transition-colors hover:text-ink"
               href={siteConfig.repository}
@@ -28,8 +35,8 @@ export function SiteFooter() {
             {locales.map((item) => (
               <li key={item.code}>
                 <a
-                  href={localePath(item.code)}
-                  hrefLang={item.tag}
+                  href={fallbackPathIn(route, item.code)}
+                  hrefLang={pathIn(route, item.code) ? item.tag : undefined}
                   lang={item.tag}
                   aria-current={item.code === locale.code ? 'true' : undefined}
                   className={

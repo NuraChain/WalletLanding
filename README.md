@@ -17,6 +17,20 @@ npm run dev
 The dev server serves every language from the same SPA: open
 `http://localhost:9500/fa/` for Persian.
 
+## Writing a post
+
+Posts are markdown files; there is no admin panel and nothing to register:
+
+```sh
+src/content/blog/<slug>/<lang>.md      # en, fa, ar, es, pt, hi, zh, ru, fr, tr
+```
+
+Each file starts with frontmatter — `title`, `description`, `date`
+(`YYYY-MM-DD`) and comma-separated `tags` — and the rest is the post. Build,
+and `/blog/<slug>/` exists in every language you wrote a file for, with its
+hreflang set and its sitemap entry. A language you skipped simply has no page
+for that post.
+
 ## Scripts
 
 - `npm run dev` — dev server

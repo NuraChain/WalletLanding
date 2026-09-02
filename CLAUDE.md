@@ -80,10 +80,13 @@ client-side language state.
   (`types.ts`), so a string missing from any language fails `tsc`. `en.ts` is
   the reference. The other nine were translated from it by Claude and have not
   been reviewed by native speakers — `TODO(content)` before launch.
-- **How the build gets ten pages.** `includedRoutes` in `src/main.tsx` returns
-  one path per locale; vite-react-ssg calls `createRoot(false, path)` per route
-  and the callback swaps `ctx.app` for the page in that locale (`routePath` is
-  in the context). In the browser the locale is read off `location.pathname`.
+- **How the build gets its pages.** `includedRoutes` in `src/main.tsx` returns
+  `allRoutes()` from `src/route.ts` — one path per locale, plus the blog;
+  vite-react-ssg calls `createRoot(false, path)` per route and the callback
+  swaps `ctx.app` for the page that path names (`routePath` is in the context).
+  In the browser the same `routeFromPath` reads it off `location.pathname`.
+  There is still no router: `src/route.ts` is only an agreement about what the
+  paths are, and every link between pages is a real navigation.
 - **Adding a language:** add it to `locales.ts`, write `src/i18n/<code>.ts`,
   register it in `src/i18n/index.ts`. If its script isn't Latin, Cyrillic,
   Arabic, Devanagari or Han, add a `body[data-script='…']` block in
@@ -116,6 +119,42 @@ client-side language state.
   ship once per page inside the static HTML; the language-to-flag mapping is
   `flag` in `locales.ts` (a convention - a language is not a country).
 
+## Blog
+
+Markdown files, no admin panel, no database, in all ten languages:
+`/blog/` and `/blog/<slug>/` in English, `/<lang>/blog/…` elsewhere.
+
+- **Content** is `src/content/blog/<slug>/<lang>.md`. The directory _is_ the
+  index — adding a file adds a page, in the build and in the sitemap. The slug
+  is shared across languages (it stays English) so translations pair up.
+- **Frontmatter** is `title`, `description`, `date` (`YYYY-MM-DD`) and `tags`
+  (comma-separated). A missing field fails the build rather than shipping an
+  untitled post.
+- **A post exists in a language only if that file exists.** That is what
+  decides hreflang, the sitemap alternates and the switcher: an untranslated
+  post is absent in that language, never served as English under a Persian
+  URL. `src/blog/posts.ts` is where that rule lives.
+- **Markdown is compiled at build time** by `plugins/markdown.ts` into
+  `export const meta` / `export const html`. The dialect is small on purpose —
+  headings, paragraphs, lists, quotes, fenced code, rules, and inline
+  code/bold/italic/links. Note oxfmt formats the posts too and rewrites
+  `*this*` into `_this_`, so the renderer accepts both.
+- **Post bodies are not in the browser bundle.** `posts.ts` globs `html` only
+  when `import.meta.env.SSR || import.meta.env.DEV`, so the production client
+  build tree-shakes every body out; `PostBody.tsx` reads the markup back off
+  the prerendered DOM, which also keeps hydration a no-op. Adding fifty posts
+  therefore costs the landing page nothing. If you make the body reach React
+  some other way, check `dist/assets/*.js` for a sentence from a post.
+- **Reading time** is counted at build time — words, or Han ideographs where
+  there are no spaces.
+- **Dates stay ISO** in the mono face. They are data, and a `<time dateTime>`
+  is also what a crawler wants; per-locale month names would risk a hydration
+  mismatch between Node's ICU and the browser's.
+- **`.prose` in `index.css`** is the only running text on the site, so it is
+  the one place with typographic defaults instead of utilities. All logical
+  properties, so RTL mirrors for free. Links there are underlined ink, never
+  the seal blue.
+
 ## SEO
 
 - `public/og.png` (1200x630) is the social card. It is a rendered screenshot,
@@ -135,9 +174,13 @@ client-side language state.
   feeds the meta tags _and_ the `robots.txt` / `sitemap.xml` that
   `vite.config.ts` emits at build time. Those two files are generated, not
   checked in; don't add copies to `public/`.
-- `ROUTES` in `vite.config.ts` is derived from the locale list. A page that is
-  not a language would need real routing — switching off single-page mode and
-  installing `react-router-dom`.
+- The blog adds `Blog`, `BlogPosting` and `BreadcrumbList` nodes
+  (`src/blog/schema.ts`), appended to that same graph through `<Seo graph>`.
+  A post page is `og:type=article` and carries `article:published_time`.
+- `sitemapEntries` in `vite.config.ts` reads the locale list _and_ the content
+  directory with `node:fs`, so blog URLs carry their own `lastmod` (the post's
+  date) and only the alternates that exist. The app reads the same directory
+  through `import.meta.glob`: one source of truth on disk, two readers.
 - `robots.txt` names the AI crawlers explicitly. `Allow: /` under `*` already
   covers them, but `Google-Extended` and `Applebot-Extended` are AI-training
   opt-outs where being named is what makes the intent unambiguous.
@@ -206,8 +249,9 @@ Search the tree for `TODO(content)`, `TODO(design)` and `TODO(deploy)`:
   lists five platforms (Windows, macOS, Linux, Android, iOS) at the owner's
   request; the latest release ships three (Windows, Linux, Android) and the
   README names only Windows and Android — reconcile them.
-  The nine translations need a native-speaker pass. `twitterHandle` in
-  `src/site.config.ts` is still null.
+  The nine translations need a native-speaker pass — the interface copy in
+  `src/i18n/` and the nine translated posts under `src/content/blog/` alike.
+  `twitterHandle` in `src/site.config.ts` is still null.
 - `TODO(deploy)` — Windows, Linux and Android download their asset straight
   from `/releases/latest/download/<file>`, so they follow the newest release on
   their own as long as the asset file names don't change; Android also links to
