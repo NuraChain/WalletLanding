@@ -413,6 +413,32 @@
     box-shadow: inset 0 0 0 1px var(--color-ink);
   }
 
+  /* ---------- Community marks ---------- */
+
+  /* The ghost button's geometry at icon size: a hairline square holding a
+     monochrome mark, the way the builds section labels its rows. Nothing here
+     takes the seal blue - on this page that colour means one thing only. The
+     row is `gap`-ed rather than divided, so it stays symmetric in RTL. */
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 4px;
+    color: var(--color-ink-2);
+    box-shadow: inset 0 0 0 1px var(--color-rule);
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+  .social-link:hover {
+    background: var(--color-card);
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
+
   /* ---------- Language menu ---------- */
 
   /* On phones the panel spans the header row (its containing block is the

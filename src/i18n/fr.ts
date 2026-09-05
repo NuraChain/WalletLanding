@@ -119,6 +119,7 @@ export const fr: Content = {
     repository: 'Dépôt',
     license: 'Licence MIT',
     languages: 'Langues',
+    social: 'Communauté',
   },
 
   blog: {

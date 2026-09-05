@@ -122,6 +122,7 @@ export const en: Content = {
     repository: 'Repository',
     license: 'MIT License',
     languages: 'Languages',
+    social: 'Community',
   },
 
   blog: {

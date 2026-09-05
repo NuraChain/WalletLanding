@@ -103,6 +103,7 @@ export const zh: Content = {
     repository: '代码仓库',
     license: 'MIT 许可证',
     languages: '语言',
+    social: '社区',
   },
 
   blog: {

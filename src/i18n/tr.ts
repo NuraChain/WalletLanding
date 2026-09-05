@@ -114,6 +114,7 @@ export const tr: Content = {
     repository: 'Depo',
     license: 'MIT Lisansı',
     languages: 'Diller',
+    social: 'Topluluk',
   },
 
   blog: {

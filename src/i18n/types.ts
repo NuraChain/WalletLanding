@@ -47,7 +47,14 @@ export type Content = {
     downloadFor: (os: string) => string
   }
   source: { eyebrow: string; headline: string; body: string; cta: string }
-  footer: { tagline: string; repository: string; license: string; languages: string }
+  footer: {
+    tagline: string
+    repository: string
+    license: string
+    languages: string
+    /** Accessible name of the community-accounts row. */
+    social: string
+  }
   /**
    * The blog's own chrome. The posts themselves are markdown files under
    * src/content/blog/<slug>/<lang>.md, not strings here.

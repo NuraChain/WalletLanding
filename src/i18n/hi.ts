@@ -111,6 +111,7 @@ export const hi: Content = {
     repository: 'रिपॉज़िटरी',
     license: 'MIT लाइसेंस',
     languages: 'भाषाएँ',
+    social: 'समुदाय',
   },
 
   blog: {

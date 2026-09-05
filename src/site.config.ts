@@ -92,6 +92,20 @@ export const siteConfig = {
     },
     { os: 'iOS', kind: 'mobile', icon: 'apple', href: null, store: null },
   ],
+
+  /**
+   * Community accounts, in the order nurachain.net lists them. They are the
+   * chain's accounts - the wallet keeps no separate ones - so these URLs are
+   * the ones published there. `icon` names a mark in components/SocialIcon.tsx;
+   * the names are brands and are never translated.
+   */
+  social: [
+    { name: 'GitHub', icon: 'github', href: 'https://github.com/NuraChain' },
+    { name: 'Telegram', icon: 'telegram', href: 'https://t.me/nurachain' },
+    { name: 'X', icon: 'x', href: 'https://x.com/nurachainnet' },
+    { name: 'Discord', icon: 'discord', href: 'https://discord.gg/8BMAXTdXQg' },
+    { name: 'Instagram', icon: 'instagram', href: 'https://www.instagram.com/nura.chain/' },
+  ],
 } as const
 
 /**

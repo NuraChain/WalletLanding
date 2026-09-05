@@ -107,6 +107,7 @@ export const fa: Content = {
     repository: 'مخزن کد',
     license: 'مجوز MIT',
     languages: 'زبان‌ها',
+    social: 'انجمن',
   },
 
   blog: {

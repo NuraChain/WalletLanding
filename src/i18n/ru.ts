@@ -118,6 +118,7 @@ export const ru: Content = {
     repository: 'Репозиторий',
     license: 'Лицензия MIT',
     languages: 'Языки',
+    social: 'Сообщество',
   },
 
   blog: {

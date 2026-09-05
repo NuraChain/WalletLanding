@@ -110,6 +110,7 @@ export const ar: Content = {
     repository: 'المستودع',
     license: 'رخصة MIT',
     languages: 'اللغات',
+    social: 'المجتمع',
   },
 
   blog: {

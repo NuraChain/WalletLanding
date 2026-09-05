@@ -3,6 +3,7 @@ import { useLocale } from '../i18n/context'
 import { locales } from '../i18n/locales'
 import { blogPath, fallbackPathIn, pathIn } from '../route'
 import { siteConfig } from '../site.config'
+import { SocialIcon } from './SocialIcon'
 
 export function SiteFooter() {
   const { locale, t, route } = useLocale()
@@ -28,6 +29,26 @@ export function SiteFooter() {
             <span>{t.footer.license}</span>
           </p>
         </div>
+
+        {/* The project's accounts, shared with Nura Chain. The brand name is
+            the link's accessible name; the mark alone is not one. */}
+        <nav aria-label={t.footer.social}>
+          <ul className="flex flex-wrap items-center gap-2">
+            {siteConfig.social.map((account) => (
+              <li key={account.name}>
+                <a
+                  className="social-link"
+                  href={account.href}
+                  rel="noreferrer"
+                  title={account.name}
+                >
+                  <SocialIcon name={account.icon} />
+                  <span className="sr-only">{account.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         {/* Plain links to every translation: crawlers and no-JS readers find them here. */}
         <nav aria-label={t.footer.languages}>

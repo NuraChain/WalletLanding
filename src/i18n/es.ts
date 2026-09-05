@@ -118,6 +118,7 @@ export const es: Content = {
     repository: 'Repositorio',
     license: 'Licencia MIT',
     languages: 'Idiomas',
+    social: 'Comunidad',
   },
 
   blog: {
