@@ -71,8 +71,8 @@ Rules that follow from this:
 ## Languages
 
 `/` is English; every other language lives at `/<code>/` — fa, ar, es, pt, hi,
-zh, ru, fr, tr. Switching language is a real navigation; there is no
-client-side language state.
+zh, ru, fr, tr. Switching language is a real navigation; nothing on the client
+decides what language a page renders in — the URL already did.
 
 - **The list** is `src/i18n/locales.ts`: code, BCP 47 tag (what `<html lang>`
   and `hreflang` get — Chinese is `zh-Hans`), endonym, direction, `og:locale`,
@@ -121,6 +121,25 @@ client-side language state.
   drawn with `<use>` from the SVG sprite in `Flags.tsx` so the ten symbols
   ship once per page inside the static HTML; the language-to-flag mapping is
   `flag` in `locales.ts` (a convention - a language is not a country).
+- **First visit picks the language.** A small script in `<head>` reads
+  `navigator.languages` and replaces `/` with that language's page. English
+  wins the moment it appears in the list, and an unrecognised language stays on
+  English, so the fallback is to do nothing at all. It is generated from
+  `locales.ts` by `plugins/locale-redirect.ts` and written into `index.html` in
+  place of the `<!--locale-redirect-->` comment, so adding a language still
+  needs no edit here.
+  - **Only on `/`.** Every language has a home page, so the target always
+    exists; a deep link is already a deliberate page in a deliberate language,
+    and being moved off it would lose the page you asked for.
+  - **Only once.** The key is `nura.locale` in `localStorage`, written both by
+    that script and by the switcher through `src/i18n/preference.ts` — so a
+    reader who picks English while their browser is Persian keeps English, and
+    nobody is ever redirected twice. That key is the only client-side language
+    state on the site, and it decides nothing about what a page renders.
+  - **Inline, synchronous, above the font stylesheet.** The React entry is a
+    module script and so runs after first paint, which would show a sentence of
+    English before yanking it away; and a sync script placed after a stylesheet
+    waits for that stylesheet to load.
 
 ## Blog
 

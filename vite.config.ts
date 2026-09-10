@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
 import type {} from 'vite-react-ssg'
 
+import { localeRedirect } from './plugins/locale-redirect.ts'
 import { compilePost, markdown } from './plugins/markdown.ts'
 import { DEFAULT_LOCALE, type LocaleCode, localePath, locales } from './src/i18n/locales.ts'
 import { ORIGIN_PLACEHOLDER } from './src/site.config.ts'
@@ -186,7 +187,7 @@ function seoFiles(origin: string): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [markdown(), react(), tailwindcss(), seoFiles(ORIGIN_PLACEHOLDER)],
+  plugins: [markdown(), react(), tailwindcss(), localeRedirect(), seoFiles(ORIGIN_PLACEHOLDER)],
 
   server: { port: DEV_PORT, strictPort: true },
   preview: { port: DEV_PORT, strictPort: true },

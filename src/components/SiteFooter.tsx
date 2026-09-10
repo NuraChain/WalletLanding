@@ -1,6 +1,7 @@
 import { hasBlog } from '../blog/posts'
 import { useLocale } from '../i18n/context'
 import { locales } from '../i18n/locales'
+import { rememberLocale } from '../i18n/preference'
 import { blogPath, fallbackPathIn, pathIn } from '../route'
 import { siteConfig } from '../site.config'
 import { SocialIcon } from './SocialIcon'
@@ -50,7 +51,9 @@ export function SiteFooter() {
           </ul>
         </nav>
 
-        {/* Plain links to every translation: crawlers and no-JS readers find them here. */}
+        {/* Plain links to every translation: crawlers and no-JS readers find them
+            here. Like the switcher, a click records the choice, so first-visit
+            detection never sends the reader back. */}
         <nav aria-label={t.footer.languages}>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {locales.map((item) => (
@@ -60,6 +63,7 @@ export function SiteFooter() {
                   hrefLang={pathIn(route, item.code) ? item.tag : undefined}
                   lang={item.tag}
                   aria-current={item.code === locale.code ? 'true' : undefined}
+                  onClick={() => rememberLocale(item.code)}
                   className={
                     item.code === locale.code ? 'text-ink' : 'transition-colors hover:text-ink'
                   }

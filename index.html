@@ -15,6 +15,18 @@
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#070b12" />
 
+    <!--
+      First visit only: reads the browser's languages and replaces this URL
+      with that language's page, English if none of them is one we have. The
+      script is generated from the locale list and written in here at build
+      time by plugins/locale-redirect.ts, which is also where the reasoning is.
+
+      Its position is deliberate. It must run before anything is painted, and
+      a synchronous script placed after a stylesheet waits for that stylesheet
+      to load - so it goes above the font link below, and below <meta charset>.
+    -->
+    <!--locale-redirect-->
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- The Latin faces every language uses. Per-script additions come from Seo.tsx. -->

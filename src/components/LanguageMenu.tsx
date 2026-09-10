@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 
 import { useLocale } from '../i18n/context'
 import { locales } from '../i18n/locales'
+import { rememberLocale } from '../i18n/preference'
 import { fallbackPathIn, pathIn } from '../route'
 import { Flag, FlagSprite } from './Flags'
 
@@ -17,6 +18,11 @@ import { Flag, FlagSprite } from './Flags'
  * Each translation is its own directory, so switching is a real navigation -
  * to the same page in the other language, or, for a post that language does
  * not have, to its blog index rather than a URL that was never written.
+ *
+ * Picking one also records it (src/i18n/preference.ts), which is what stops
+ * the first-visit detection from ever overruling a reader who chose for
+ * themselves. With JavaScript off nothing is recorded and nothing detects
+ * either, so the two stay in step.
  */
 export function LanguageMenu() {
   const { locale, t, route } = useLocale()
@@ -61,6 +67,7 @@ export function LanguageMenu() {
                 hrefLang={pathIn(route, item.code) ? item.tag : undefined}
                 lang={item.tag}
                 aria-current={item.code === locale.code ? 'true' : undefined}
+                onClick={() => rememberLocale(item.code)}
               >
                 <span className="lang-name">
                   <Flag code={item.flag} />
