@@ -4,7 +4,7 @@ export const fr: Content = {
   meta: {
     title: 'Nura Wallet — vos clés ne quittent jamais l’appareil',
     description:
-      'Un portefeuille Ethereum non custodial pour Windows, macOS, Linux, Android et iOS. Votre phrase de récupération est chiffrée avec AES-GCM et ne quitte jamais l’appareil.',
+      'Portefeuille Ethereum non custodial pour Windows, macOS, Linux, Android et iOS. Votre phrase de récupération, chiffrée en AES-GCM, ne quitte jamais l’appareil.',
   },
 
   header: {

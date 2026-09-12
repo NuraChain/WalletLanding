@@ -4,7 +4,7 @@ export const es: Content = {
   meta: {
     title: 'Nura Wallet — tus claves nunca salen del dispositivo',
     description:
-      'Una billetera de Ethereum con autocustodia para Windows, macOS, Linux, Android e iOS. Tu frase de recuperación se cifra con AES-GCM y nunca sale del dispositivo.',
+      'Billetera de Ethereum con autocustodia para Windows, macOS, Linux, Android e iOS. Tu frase de recuperación se cifra con AES-GCM y nunca sale del dispositivo.',
   },
 
   header: { nav: 'Principal', download: 'Descargar', language: 'Idioma', licensed: 'Licencia MIT' },

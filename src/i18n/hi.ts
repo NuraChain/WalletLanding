@@ -4,7 +4,7 @@ export const hi: Content = {
   meta: {
     title: 'Nura Wallet — आपकी कुंजियाँ कभी डिवाइस से बाहर नहीं जातीं',
     description:
-      'Windows, macOS, Linux, Android और iOS के लिए एक सेल्फ-कस्टोडियल Ethereum वॉलेट। आपका रिकवरी फ़्रेज़ AES-GCM से एन्क्रिप्ट होता है और कभी डिवाइस से बाहर नहीं जाता।',
+      'Windows, macOS, Linux, Android और iOS के लिए सेल्फ-कस्टोडियल Ethereum वॉलेट। आपका रिकवरी फ़्रेज़ AES-GCM से एन्क्रिप्ट होता है और कभी डिवाइस से बाहर नहीं जाता।',
   },
 
   header: { nav: 'मुख्य', download: 'डाउनलोड', language: 'भाषा', licensed: 'MIT लाइसेंस' },
