@@ -47,6 +47,13 @@ export const siteConfig = {
   /** 1200x630 social card. Rendered from design/og.html - see CLAUDE.md. */
   ogImage: '/og.png',
 
+  /**
+   * The page ground, for the web app manifest and the browser chrome around it.
+   * index.html repeats it in <meta name="theme-color"> and index.css declares it
+   * as --color-paper; the three have to stay in step.
+   */
+  themeColor: '#070b12',
+
   /** TODO(content): set to a handle once one exists. */
   twitterHandle: null as string | null,
 

@@ -225,6 +225,28 @@ Markdown files, no admin panel, no database, in all ten languages:
 - `robots.txt` names the AI crawlers explicitly. `Allow: /` under `*` already
   covers them, but `Google-Extended` and `Applebot-Extended` are AI-training
   opt-outs where being named is what makes the intent unambiguous.
+- **The web app manifest is per language and generated**, like robots.txt and
+  the sitemap: `vite.config.ts` emits `/manifest.webmanifest` and
+  `/<lang>/manifest.webmanifest` from the locale list, and `Seo.tsx` links the
+  one belonging to the page's language (a blog post links its language's, not
+  its own path). `id` and `scope` are `/` in all ten, so the ten files are one
+  site in ten languages rather than ten apps - the same split the JSON-LD graph
+  makes; only `lang`, `dir` and `start_url` differ.
+  - **Every URL in it is root-relative**, so the origin never comes up.
+    `sub_filter` only rewrites the types named in `sub_filter_types`
+    (`text/html`, `text/xml`, `text/plain`), and `application/manifest+json` is
+    not one of them - an absolute URL here would ship the placeholder origin
+    untouched. Manifest URLs resolve against the manifest, so going relative
+    costs nothing and spares the nginx config one more thing to get right.
+  - **`display` is `browser`, deliberately.** This site is the datasheet for a
+    native wallet, not the wallet; an installed standalone window carrying the
+    app's icon and name while being a marketing page is the confusion a
+    self-custody product must not create. Change it to `standalone` only if
+    making the page itself installable is actually wanted.
+  - The icon links (`icon`, `apple-touch-icon`) stay in `index.html`: they are
+    the same in every language. `theme_color` comes from `siteConfig.themeColor`,
+    which `index.html`'s `<meta name="theme-color">` and `--color-paper` in
+    `index.css` repeat - keep the three in step.
 
 ## Design system
 

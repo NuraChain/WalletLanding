@@ -137,6 +137,11 @@ export function Seo({ title, description, type = 'website', published, graph = [
       ))}
       <link rel="alternate" hrefLang="x-default" href={absoluteUrl(defaultPath)} />
 
+      {/* One manifest per language: the same app `id` and `scope` in all ten,
+          this language's start_url, lang and dir. The icon and theme colour are
+          the same everywhere and stay in index.html. */}
+      <link rel="manifest" href={`${localePath(locale.code)}manifest.webmanifest`} />
+
       {/* Scripts the base Latin faces don't cover. Only the page that needs it pays. */}
       {locale.fontQuery ? (
         <link rel="stylesheet" href={`${GOOGLE_FONTS}${locale.fontQuery}&display=swap`} />

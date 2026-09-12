@@ -8,8 +8,14 @@ import type {} from 'vite-react-ssg'
 
 import { localeRedirect } from './plugins/locale-redirect.ts'
 import { compilePost, markdown } from './plugins/markdown.ts'
-import { DEFAULT_LOCALE, type LocaleCode, localePath, locales } from './src/i18n/locales.ts'
-import { ORIGIN_PLACEHOLDER } from './src/site.config.ts'
+import {
+  DEFAULT_LOCALE,
+  type Locale,
+  type LocaleCode,
+  localePath,
+  locales,
+} from './src/i18n/locales.ts'
+import { ORIGIN_PLACEHOLDER, siteConfig } from './src/site.config.ts'
 
 /** Dev and preview both listen on this port. */
 const DEV_PORT = 4100
@@ -129,10 +135,54 @@ function sitemapEntries(buildDate: string): SitemapEntry[] {
 }
 
 /**
- * Emits robots.txt and sitemap.xml at build time instead of checking them into
- * public/, so they carry the same placeholder origin the meta tags do and are
- * rewritten by the same nginx rule. Both formats require absolute URLs, so
- * neither can dodge the question by going relative.
+ * One web app manifest per language, emitted beside that language's page:
+ * /manifest.webmanifest for English, /fa/manifest.webmanifest for Persian.
+ *
+ * `display: 'browser'` is deliberate. This site is the datasheet for a native
+ * wallet, not the wallet - an installed standalone window carrying the app's
+ * icon and name while being a marketing page is exactly the confusion a
+ * self-custody product must not create. The manifest is here for the name,
+ * icon and colours that a share or an add-to-home-screen shows; making the
+ * page installable is a one-word change here if that is ever wanted.
+ *
+ * Every URL in it is root-relative, because nginx's sub_filter only rewrites
+ * text/html, text/xml and text/plain - an absolute URL here would keep the
+ * placeholder origin. `id` and `scope` are the site root in all ten, so the
+ * ten files describe one site in ten languages rather than ten separate apps,
+ * which is the same split the JSON-LD graph in Seo.tsx makes.
+ */
+function manifest(locale: Locale): string {
+  return `${JSON.stringify(
+    {
+      id: '/',
+      name: siteConfig.name,
+      short_name: siteConfig.name,
+      lang: locale.tag,
+      dir: locale.dir,
+      start_url: localePath(locale.code),
+      scope: '/',
+      display: 'browser',
+      background_color: siteConfig.themeColor,
+      theme_color: siteConfig.themeColor,
+      icons: [{ src: siteConfig.icon, sizes: '512x512', type: 'image/png', purpose: 'any' }],
+    },
+    null,
+    2,
+  )}
+`
+}
+
+/**
+ * Emits robots.txt, sitemap.xml and the ten manifests at build time rather than
+ * checking them into public/.
+ *
+ * robots.txt and sitemap.xml are generated so they carry the same placeholder
+ * origin the meta tags do and are rewritten by the same nginx rule; both
+ * formats require absolute URLs, so neither can dodge the question by going
+ * relative. The manifests are the opposite case: sub_filter never reaches
+ * application/manifest+json, so they are relative precisely because the rewrite
+ * would not touch them. They are generated for a different reason - one per
+ * language, off the same locale list every other per-language file comes from.
  */
 function seoFiles(origin: string): Plugin {
   let isSsrBuild = false
@@ -181,6 +231,15 @@ function seoFiles(origin: string): Plugin {
 
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robots })
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemap })
+
+      for (const locale of locales) {
+        this.emitFile({
+          type: 'asset',
+          // localePath is '/' or '/fa/'; emitted names are relative to dist/.
+          fileName: `${localePath(locale.code).slice(1)}manifest.webmanifest`,
+          source: manifest(locale),
+        })
+      }
     },
   }
 }
