@@ -94,6 +94,7 @@ export const ar: Content = {
     headline: 'سطح المكتب والجوال.',
     desktop: 'إصدار سطح المكتب',
     mobile: 'إصدار الجوال',
+    extension: 'إضافة المتصفح',
     unavailable: 'غير متاح بعد',
     downloadFor: (os) => `تنزيل لنظام ${os}`,
   },

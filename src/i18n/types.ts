@@ -43,6 +43,7 @@ export type Content = {
     headline: string
     desktop: string
     mobile: string
+    extension: string
     unavailable: string
     downloadFor: (os: string) => string
   }

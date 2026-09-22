@@ -101,6 +101,7 @@ export const ru: Content = {
     headline: 'Десктоп и мобильные.',
     desktop: 'Десктопная сборка',
     mobile: 'Мобильная сборка',
+    extension: 'Расширение браузера',
     unavailable: 'Пока недоступно',
     downloadFor: (os) => `Скачать для ${os}`,
   },

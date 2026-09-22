@@ -102,6 +102,7 @@ export const fr: Content = {
     headline: 'Bureau et mobile.',
     desktop: 'Version bureau',
     mobile: 'Version mobile',
+    extension: 'Extension de navigateur',
     unavailable: 'Pas encore disponible',
     downloadFor: (os) => `Télécharger pour ${os}`,
   },

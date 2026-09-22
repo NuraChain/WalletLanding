@@ -97,6 +97,7 @@ export const pt: Content = {
     headline: 'Desktop e celular.',
     desktop: 'Versão para desktop',
     mobile: 'Versão para celular',
+    extension: 'Extensão de navegador',
     unavailable: 'Ainda não disponível',
     downloadFor: (os) => `Baixar para ${os}`,
   },

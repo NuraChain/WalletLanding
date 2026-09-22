@@ -105,6 +105,7 @@ export const en: Content = {
     headline: 'Desktop and mobile.',
     desktop: 'Desktop build',
     mobile: 'Mobile build',
+    extension: 'Browser extension',
     unavailable: 'Not available yet',
     downloadFor: (os) => `Download for ${os}`,
   },

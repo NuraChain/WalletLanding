@@ -28,9 +28,7 @@ export function PlatformsSection() {
               />
               <div>
                 <p className="display text-xl">{platform.os}</p>
-                <p className="mt-1 font-mono text-xs text-ink-2">
-                  {platform.kind === 'desktop' ? t.platforms.desktop : t.platforms.mobile}
-                </p>
+                <p className="mt-1 font-mono text-xs text-ink-2">{t.platforms[platform.kind]}</p>
               </div>
             </div>
 

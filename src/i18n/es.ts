@@ -101,6 +101,7 @@ export const es: Content = {
     headline: 'Escritorio y móvil.',
     desktop: 'Versión de escritorio',
     mobile: 'Versión móvil',
+    extension: 'Extensión de navegador',
     unavailable: 'Aún no disponible',
     downloadFor: (os) => `Descargar para ${os}`,
   },

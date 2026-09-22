@@ -87,6 +87,7 @@ export const zh: Content = {
     headline: '桌面与移动。',
     desktop: '桌面版',
     mobile: '移动版',
+    extension: '浏览器扩展',
     unavailable: '暂未提供',
     downloadFor: (os) => `下载 ${os} 版`,
   },

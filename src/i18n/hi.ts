@@ -94,6 +94,7 @@ export const hi: Content = {
     headline: 'डेस्कटॉप और मोबाइल।',
     desktop: 'डेस्कटॉप बिल्ड',
     mobile: 'मोबाइल बिल्ड',
+    extension: 'ब्राउज़र एक्सटेंशन',
     unavailable: 'अभी उपलब्ध नहीं',
     downloadFor: (os) => `${os} के लिए डाउनलोड करें`,
   },

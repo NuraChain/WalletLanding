@@ -91,6 +91,7 @@ export const fa: Content = {
     headline: 'دسکتاپ و موبایل.',
     desktop: 'نسخهٔ دسکتاپ',
     mobile: 'نسخهٔ موبایل',
+    extension: 'افزونهٔ مرورگر',
     unavailable: 'هنوز منتشر نشده',
     downloadFor: (os) => `دانلود برای ${os}`,
   },

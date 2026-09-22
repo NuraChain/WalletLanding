@@ -65,8 +65,9 @@ export const siteConfig = {
   /**
    * Release targets, in page order. OS names are not translated. `href` is the
    * build itself - a direct download of that asset from the latest release for
-   * the three that exist - and null where there is no build yet, which the page
-   * says outright instead of linking nowhere. `store` is an app-store listing,
+   * the three that exist, or the Chrome Web Store listing for the extension,
+   * which is the only way that one is installed - and null where there is no
+   * build yet, which the page says outright instead of linking nowhere. `store` is an app-store listing,
    * offered first when there is one. `icon` names a mark in
    * components/PlatformIcon.tsx.
    * TODO(deploy): macOS and iOS have no build yet; set `href` once they do.
@@ -98,6 +99,13 @@ export const siteConfig = {
       },
     },
     { os: 'iOS', kind: 'mobile', icon: 'apple', href: null, store: null },
+    {
+      os: 'Google Chrome',
+      kind: 'extension',
+      icon: 'chrome',
+      href: 'https://chromewebstore.google.com/detail/bpcanahgbjafkgflkfbjejipmigakopg',
+      store: null,
+    },
   ],
 
   /**

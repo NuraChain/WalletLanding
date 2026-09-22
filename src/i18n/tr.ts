@@ -97,6 +97,7 @@ export const tr: Content = {
     headline: 'Masaüstü ve mobil.',
     desktop: 'Masaüstü sürümü',
     mobile: 'Mobil sürümü',
+    extension: 'Tarayıcı uzantısı',
     unavailable: 'Henüz mevcut değil',
     downloadFor: (os) => `${os} için indir`,
   },

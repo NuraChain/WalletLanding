@@ -38,9 +38,10 @@ export function Seo({ title, description, type = 'website', published, graph = [
 
   const canonical = absoluteUrl(pathOf(route))
   const ogImage = absoluteUrl(siteConfig.ogImage)
-  // Only platforms that have a build - this is a claim about the product.
+  // Only platforms that have a build, and only real operating systems - this is
+  // a claim about the product, and Chrome is not one.
   const operatingSystem = siteConfig.platforms
-    .filter((platform) => platform.href)
+    .filter((platform) => platform.href && platform.kind !== 'extension')
     .map((platform) => platform.os)
     .join(', ')
   /** Every language the same page exists in, for the site-wide nodes below. */
