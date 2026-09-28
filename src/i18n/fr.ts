@@ -138,4 +138,6 @@ export const fr: Content = {
     backToBlog: 'Toutes les notes',
     more: 'Autres notes',
   },
+
+  pages: { nav: 'Mentions légales et assistance', updated: 'Dernière mise à jour' },
 }

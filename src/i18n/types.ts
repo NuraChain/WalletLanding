@@ -74,4 +74,13 @@ export type Content = {
     backToBlog: string
     more: string
   }
+  /**
+   * Chrome of the text pages - privacy, terms, support. Their titles and
+   * bodies are markdown under src/content/pages/<slug>/<lang>.md.
+   */
+  pages: {
+    /** Accessible name of the footer row that links to them. */
+    nav: string
+    updated: string
+  }
 }

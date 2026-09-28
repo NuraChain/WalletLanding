@@ -129,4 +129,6 @@ export const ar: Content = {
     backToBlog: 'كل الملاحظات',
     more: 'ملاحظات أخرى',
   },
+
+  pages: { nav: 'الشؤون القانونية والدعم', updated: 'آخر تحديث' },
 }

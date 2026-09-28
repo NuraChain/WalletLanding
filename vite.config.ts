@@ -21,6 +21,7 @@ import { ORIGIN_PLACEHOLDER, siteConfig } from './src/site.config.ts'
 const DEV_PORT = 4100
 
 const BLOG_DIR = 'src/content/blog'
+const PAGES_DIR = 'src/content/pages'
 
 /** Crawlers granted explicit access. The `*` rule already allows them; naming
  *  them is what opts back in for the AI agents that treat silence as a no. */
@@ -51,25 +52,26 @@ type SitemapEntry = {
 }
 
 /**
- * The blog, read off the content directory: `<slug>/<lang>.md`. The app reads
- * the same layout through `import.meta.glob` (src/blog/posts.ts) - the
- * directory is the single source of truth, so the two cannot drift apart, and
- * the sitemap needs no list to maintain.
+ * A content directory - the blog or the text pages - read off the disk:
+ * `<slug>/<lang>.md`. The app reads the same layout through `import.meta.glob`
+ * (src/blog/posts.ts, src/pages.ts) - the directory is the single source of
+ * truth, so the two cannot drift apart, and the sitemap needs no list to
+ * maintain.
  */
-function readBlog(): { slug: string; locale: LocaleCode; date: string }[] {
-  if (!existsSync(BLOG_DIR)) return []
+function readContent(dir: string): { slug: string; locale: LocaleCode; date: string }[] {
+  if (!existsSync(dir)) return []
 
   const codes = new Set<string>(locales.map((locale) => locale.code))
 
-  return readdirSync(BLOG_DIR, { withFileTypes: true })
+  return readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .flatMap((entry) =>
-      readdirSync(join(BLOG_DIR, entry.name))
+      readdirSync(join(dir, entry.name))
         .filter((file) => file.endsWith('.md'))
         .map((file) => {
           const code = file.slice(0, -3)
           if (!codes.has(code)) throw new Error(`${entry.name}: unknown language "${code}"`)
-          const id = join(BLOG_DIR, entry.name, file)
+          const id = join(dir, entry.name, file)
           return {
             slug: entry.name,
             locale: code as LocaleCode,
@@ -81,7 +83,8 @@ function readBlog(): { slug: string; locale: LocaleCode; date: string }[] {
 
 /** Every URL the build writes, in the order the sitemap lists them. */
 function sitemapEntries(buildDate: string): SitemapEntry[] {
-  const blog = readBlog()
+  const blog = readContent(BLOG_DIR)
+  const pages = readContent(PAGES_DIR)
   const newest = (posts: { date: string }[]) =>
     posts.map((post) => post.date).sort((a, b) => (a < b ? 1 : -1))[0] ?? buildDate
 
@@ -116,20 +119,28 @@ function sitemapEntries(buildDate: string): SitemapEntry[] {
     })
   }
 
-  for (const post of blog) {
-    const translations = blog.filter((item) => item.slug === post.slug)
-    entries.push({
-      path: `${localePath(post.locale)}blog/${post.slug}/`,
-      lastmod: post.date,
-      alternates: withDefault(
-        translations.flatMap((item): [string, string][] => {
-          const locale = locales.find((entry) => entry.code === item.locale)
-          return locale ? [[locale.tag, `${localePath(item.locale)}blog/${item.slug}/`]] : []
-        }),
-      ),
-      priority: '0.6',
-    })
+  /** A post or text page, with alternates for only the languages it exists in. */
+  const translated = (items: typeof blog, prefix: string, priority: string) => {
+    for (const item of items) {
+      const translations = items.filter((other) => other.slug === item.slug)
+      entries.push({
+        path: `${localePath(item.locale)}${prefix}${item.slug}/`,
+        lastmod: item.date,
+        alternates: withDefault(
+          translations.flatMap((other): [string, string][] => {
+            const locale = locales.find((entry) => entry.code === other.locale)
+            return locale
+              ? [[locale.tag, `${localePath(other.locale)}${prefix}${other.slug}/`]]
+              : []
+          }),
+        ),
+        priority,
+      })
+    }
   }
+
+  translated(blog, 'blog/', '0.6')
+  translated(pages, '', '0.3')
 
   return entries
 }
@@ -253,7 +264,7 @@ export default defineConfig({
 
   // vite-react-ssg: prerender the app to static HTML so crawlers that don't
   // run JavaScript still receive the full page. The route list comes from
-  // `includedRoutes` in src/main.tsx (one page per language, plus the blog).
+  // `includedRoutes` in src/main.tsx (one page per language, plus text pages and the blog).
   ssgOptions: {
     entry: 'src/main.tsx',
     dirStyle: 'nested',

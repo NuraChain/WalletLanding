@@ -177,6 +177,22 @@ Markdown files, no admin panel, no database, in all ten languages:
   properties, so RTL mirrors for free. Links there are underlined ink, never
   the seal blue.
 
+## Text pages
+
+Privacy policy, terms of use and support, at `/<slug>/` and `/<lang>/<slug>/`
+(`privacy`, `terms`, `support`). Same pipeline as the blog, separate directory:
+
+- **Content** is `src/content/pages/<slug>/<lang>.md`, read by `src/pages.ts`
+  and rendered by `TextPage.tsx`. Frontmatter as for posts; `date` is shown as
+  "Last updated" and is the sitemap `lastmod`, so bump it when the text changes.
+  The same file-exists rule decides which languages a page is in.
+- **The footer** links them in every language, labelled with each page's own
+  `title`. Links between them are written per language (`/fa/privacy/`), since
+  the markdown has no idea which locale it is in.
+- **No external links, no contact details.** The owner wants these pages about
+  the app only: third-party services the app contacts are named as categories,
+  and "contact us" points at the community links in the footer.
+
 ## SEO
 
 - `public/og.png` (1200x630) is the social card. It is a rendered screenshot,
@@ -315,6 +331,10 @@ Search the tree for `TODO(content)`, `TODO(design)` and `TODO(deploy)`:
   The nine translations need a native-speaker pass — the interface copy in
   `src/i18n/` and the nine translated posts under `src/content/blog/` alike.
   `twitterHandle` in `src/site.config.ts` is still null.
+  The text pages under `src/content/pages/` have no contact email and no
+  private channel for reporting a vulnerability. The terms of use were drafted
+  by Claude and need a legal review; all nine translations of the three pages
+  need a native-speaker pass.
 - `TODO(deploy)` — Windows, Linux and Android download their asset straight
   from `/releases/latest/download/<file>`, so they follow the newest release on
   their own as long as the asset file names don't change; Android also links to

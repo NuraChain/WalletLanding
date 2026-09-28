@@ -137,4 +137,6 @@ export const ru: Content = {
     backToBlog: 'Все заметки',
     more: 'Ещё заметки',
   },
+
+  pages: { nav: 'Правовая информация и поддержка', updated: 'Последнее обновление' },
 }

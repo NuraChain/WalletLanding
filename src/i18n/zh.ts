@@ -121,4 +121,6 @@ export const zh: Content = {
     backToBlog: '全部笔记',
     more: '更多笔记',
   },
+
+  pages: { nav: '法律与支持', updated: '最后更新' },
 }

@@ -2,7 +2,8 @@ import { hasBlog } from '../blog/posts'
 import { useLocale } from '../i18n/context'
 import { locales } from '../i18n/locales'
 import { rememberLocale } from '../i18n/preference'
-import { blogPath, fallbackPathIn, pathIn } from '../route'
+import { pagesIn } from '../pages'
+import { blogPath, fallbackPathIn, pagePath, pathIn } from '../route'
 import { siteConfig } from '../site.config'
 import { SocialIcon } from './SocialIcon'
 
@@ -30,6 +31,26 @@ export function SiteFooter() {
             <span>{t.footer.license}</span>
           </p>
         </div>
+
+        {/* Privacy policy, terms, support - labelled with each page's own title. */}
+        <nav aria-label={t.pages.nav}>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {pagesIn(locale.code).map((page) => {
+              const current = route.kind === 'page' && route.slug === page.slug
+              return (
+                <li key={page.slug}>
+                  <a
+                    href={pagePath(locale.code, page.slug)}
+                    aria-current={current ? 'page' : undefined}
+                    className={current ? 'text-ink' : 'transition-colors hover:text-ink'}
+                  >
+                    {page.title}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
 
         {/* The project's accounts, shared with Nura Chain. The brand name is
             the link's accessible name; the mark alone is not one. */}

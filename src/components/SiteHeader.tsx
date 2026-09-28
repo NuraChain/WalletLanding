@@ -14,6 +14,7 @@ export function SiteHeader() {
    */
   const home = localePath(locale.code)
   const anchor = (href: string) => (route.kind === 'home' ? href : `${home}${href}`)
+  const inBlog = route.kind === 'blog' || route.kind === 'post'
 
   return (
     <header className="sticky top-0 z-50 border-b border-rule bg-paper/85 backdrop-blur-md">
@@ -44,12 +45,8 @@ export function SiteHeader() {
               <li className="hidden sm:block">
                 <a
                   href={blogPath(locale.code)}
-                  aria-current={route.kind === 'home' ? undefined : 'true'}
-                  className={
-                    route.kind === 'home'
-                      ? 'text-ink-2 transition-colors hover:text-ink'
-                      : 'text-ink'
-                  }
+                  aria-current={inBlog ? 'true' : undefined}
+                  className={inBlog ? 'text-ink' : 'text-ink-2 transition-colors hover:text-ink'}
                 >
                   {t.blog.nav}
                 </a>

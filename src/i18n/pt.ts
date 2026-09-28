@@ -133,4 +133,6 @@ export const pt: Content = {
     backToBlog: 'Todas as notas',
     more: 'Mais notas',
   },
+
+  pages: { nav: 'Legal e suporte', updated: 'Última atualização' },
 }

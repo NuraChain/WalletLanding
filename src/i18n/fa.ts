@@ -126,4 +126,6 @@ export const fa: Content = {
     backToBlog: 'همهٔ یادداشت‌ها',
     more: 'یادداشت‌های دیگر',
   },
+
+  pages: { nav: 'حقوقی و پشتیبانی', updated: 'آخرین به‌روزرسانی' },
 }

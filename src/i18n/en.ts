@@ -141,4 +141,6 @@ export const en: Content = {
     backToBlog: 'All notes',
     more: 'More notes',
   },
+
+  pages: { nav: 'Legal and support', updated: 'Last updated' },
 }

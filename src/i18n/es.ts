@@ -137,4 +137,6 @@ export const es: Content = {
     backToBlog: 'Todas las notas',
     more: 'Más notas',
   },
+
+  pages: { nav: 'Legal y soporte', updated: 'Última actualización' },
 }

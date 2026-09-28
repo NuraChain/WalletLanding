@@ -130,4 +130,6 @@ export const hi: Content = {
     backToBlog: 'सभी नोट्स',
     more: 'और नोट्स',
   },
+
+  pages: { nav: 'कानूनी जानकारी और सहायता', updated: 'अंतिम अपडेट' },
 }

@@ -5,6 +5,7 @@ import App from './App'
 import BlogPage from './BlogPage'
 import PostPage from './PostPage'
 import { allRoutes, type Route, routeFromPath } from './route'
+import TextPage from './TextPage'
 
 import './index.css'
 
@@ -26,6 +27,12 @@ function page(route: Route) {
       return (
         <StrictMode>
           <PostPage locale={route.locale} slug={route.slug} />
+        </StrictMode>
+      )
+    case 'page':
+      return (
+        <StrictMode>
+          <TextPage locale={route.locale} slug={route.slug} />
         </StrictMode>
       )
   }

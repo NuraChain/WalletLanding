@@ -9,11 +9,14 @@
  */
 import { findPost, hasBlog, postsIn } from './blog/posts'
 import { type Locale, type LocaleCode, localePath, locales } from './i18n/locales'
+import { findPage, pagesIn } from './pages'
 
 export type Route =
   | { kind: 'home'; locale: Locale }
   | { kind: 'blog'; locale: Locale }
   | { kind: 'post'; locale: Locale; slug: string }
+  /** Privacy policy, terms, support - see pages.ts. */
+  | { kind: 'page'; locale: Locale; slug: string }
 
 const BLOG = 'blog'
 
@@ -25,6 +28,10 @@ export function postPath(code: LocaleCode, slug: string): string {
   return `${blogPath(code)}${slug}/`
 }
 
+export function pagePath(code: LocaleCode, slug: string): string {
+  return `${localePath(code)}${slug}/`
+}
+
 /** The path this route is served from. */
 export function pathOf(route: Route): string {
   switch (route.kind) {
@@ -34,6 +41,8 @@ export function pathOf(route: Route): string {
       return blogPath(route.locale.code)
     case 'post':
       return postPath(route.locale.code, route.slug)
+    case 'page':
+      return pagePath(route.locale.code, route.slug)
   }
 }
 
@@ -50,12 +59,15 @@ export function pathIn(route: Route, code: LocaleCode): string | null {
       return hasBlog(code) ? blogPath(code) : null
     case 'post':
       return findPost(code, route.slug) ? postPath(code, route.slug) : null
+    case 'page':
+      return findPage(code, route.slug) ? pagePath(code, route.slug) : null
   }
 }
 
 /** Where the language switcher points when this page has no translation. */
 export function fallbackPathIn(route: Route, code: LocaleCode): string {
-  return pathIn(route, code) ?? (route.kind === 'home' ? localePath(code) : blogPath(code))
+  const blog = route.kind === 'blog' || route.kind === 'post'
+  return pathIn(route, code) ?? (blog ? blogPath(code) : localePath(code))
 }
 
 /**
@@ -69,15 +81,19 @@ export function routeFromPath(pathname: string): Route {
   const rest = locale ? segments.slice(1) : segments
   const current = locale ?? locales[0]
 
-  if (rest[0] !== BLOG) return { kind: 'home', locale: current }
+  if (rest[0] !== BLOG) {
+    return rest.length === 1 && findPage(current.code, rest[0])
+      ? { kind: 'page', locale: current, slug: rest[0] }
+      : { kind: 'home', locale: current }
+  }
   if (rest.length === 1 || !findPost(current.code, rest[1]))
     return { kind: 'blog', locale: current }
   return { kind: 'post', locale: current, slug: rest[1] }
 }
 
 /**
- * Every path the build writes: ten home pages, then, for each language that
- * has posts, its blog index and one page per post. `includedRoutes` in
+ * Every path the build writes: for each language its home page and text pages,
+ * then, where it has posts, its blog index and one page per post. `includedRoutes` in
  * main.tsx returns this, and vite.config.ts derives the same set from the
  * content directory for the sitemap.
  */
@@ -85,6 +101,7 @@ export function allRoutes(): string[] {
   const paths: string[] = []
   for (const locale of locales) {
     paths.push(localePath(locale.code))
+    for (const page of pagesIn(locale.code)) paths.push(pagePath(locale.code, page.slug))
     if (!hasBlog(locale.code)) continue
     paths.push(blogPath(locale.code))
     for (const post of postsIn(locale.code)) paths.push(postPath(locale.code, post.slug))

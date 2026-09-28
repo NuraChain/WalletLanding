@@ -133,4 +133,6 @@ export const tr: Content = {
     backToBlog: 'Tüm notlar',
     more: 'Diğer notlar',
   },
+
+  pages: { nav: 'Yasal bilgiler ve destek', updated: 'Son güncelleme' },
 }
