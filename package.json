@@ -15,6 +15,7 @@
     "format:check": "oxfmt --check",
     "check": "npm run typecheck && npm run lint && npm run format:check",
     "qa:visual": "node scripts/visual-qa.mjs",
+    "icons": "node scripts/icons.mjs",
     "service:install": "bash scripts/service-install.sh",
     "service:start": "bash scripts/service-start.sh",
     "service:stop": "bash scripts/service-stop.sh",

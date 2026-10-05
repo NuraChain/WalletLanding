@@ -41,7 +41,11 @@ const download = (asset: string) => `${repository}/releases/latest/download/${as
 export const siteConfig = {
   name: 'Nura Wallet',
 
-  /** The app icon. Favicon, header mark and JSON-LD logo all point here. */
+  /**
+   * The app icon at 512px. The header mark and the JSON-LD logo point here, and
+   * it is the master scripts/icons.mjs renders the per-platform sizes from -
+   * those are named in index.html and in the manifest in vite.config.ts.
+   */
   icon: '/favicon.png',
 
   /** 1200x630 social card. Rendered from design/og.html - see CLAUDE.md. */

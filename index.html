@@ -10,8 +10,17 @@
     -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+    <!--
+      The size each platform asks for, all rendered from /favicon.png by
+      `npm run icons`. The .ico is what a browser requests whether or not it is
+      named here, and what a tab is drawn from; 192 is Android and anything
+      that wants more pixels; 180 is the iOS home screen. Android's maskable
+      icon is named only in the manifest, and the 512 master itself only by the
+      header mark and the JSON-LD logo.
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#070b12" />
 

@@ -161,6 +161,12 @@ function sitemapEntries(buildDate: string): SitemapEntry[] {
  * placeholder origin. `id` and `scope` are the site root in all ten, so the
  * ten files describe one site in ten languages rather than ten separate apps,
  * which is the same split the JSON-LD graph in Seo.tsx makes.
+ *
+ * The icons are files in public/, rendered from the master by scripts/icons.mjs.
+ * The maskable one is its own entry and its own file: Android crops a maskable
+ * icon to its launcher shape, so that file carries the artwork smaller, and
+ * declaring the full-bleed ones maskable as well would get their sparkles cut
+ * off. Without one, Android shrinks the icon onto a white plate.
  */
 function manifest(locale: Locale): string {
   return `${JSON.stringify(
@@ -175,7 +181,16 @@ function manifest(locale: Locale): string {
       display: 'browser',
       background_color: siteConfig.themeColor,
       theme_color: siteConfig.themeColor,
-      icons: [{ src: siteConfig.icon, sizes: '512x512', type: 'image/png', purpose: 'any' }],
+      icons: [
+        { src: '/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: siteConfig.icon, sizes: '512x512', type: 'image/png', purpose: 'any' },
+        {
+          src: '/icon-maskable-512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable',
+        },
+      ],
     },
     null,
     2,
