@@ -44,10 +44,23 @@ function parseId(id: string): { slug: string; locale: LocaleCode } {
   return { slug, locale: code as LocaleCode }
 }
 
-/** Newest first - the order the index and the sitemap both use. */
+/**
+ * Newest first, then by slug, then by language - so the order is total. Posts
+ * published on the same day tie on the date, and a comparator that leaves a tie
+ * open lets each engine break it its own way: the prerender sorts in Node, the
+ * reader's browser sorts again on hydration, and the two would disagree about
+ * the order of the index.
+ */
+function byNewest(a: Post, b: Post): number {
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1
+  if (a.slug !== b.slug) return a.slug < b.slug ? -1 : 1
+  return a.locale < b.locale ? -1 : 1
+}
+
+/** The order the index uses. */
 export const posts: readonly Post[] = Object.entries(metaModules)
   .map(([id, meta]) => ({ ...meta, ...parseId(id) }))
-  .sort((a, b) => (a.date < b.date ? 1 : -1))
+  .sort(byNewest)
 
 /** Every language a given post was actually written in. Drives hreflang. */
 export function postLocales(slug: string): LocaleCode[] {
