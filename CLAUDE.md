@@ -5,18 +5,14 @@ in ten languages.
 
 ## Commands
 
-| Command                           | What it does                                                        |
-| --------------------------------- | ------------------------------------------------------------------- |
-| `npm run dev`                     | Vite dev server (plain SPA, no prerender; `/fa/` etc. work)         |
-| `npm run build`                   | `tsc -b` then `vite-react-ssg build` → static HTML in `dist/`       |
-| `npm run preview`                 | Serve `dist/` as it will be served in production                    |
-| `npm run lint` / `lint:fix`       | oxlint                                                              |
-| `npm run format` / `format:check` | oxfmt                                                               |
-| `npm run typecheck`               | `tsc -b`                                                            |
-| `npm run serve`                   | `scripts/serve.mjs` — static `dist/` server on 127.0.0.1:4100       |
-| `npm run qa:visual`               | Playwright + axe over a running server (see README)                 |
-| `npm run service:*`               | systemd unit `wallet-landing`, running `serve.mjs` behind nginx     |
-| `npm run check`                   | typecheck + lint + format:check — run this before calling work done |
+| Command             | What it does                                                        |
+| ------------------- | ------------------------------------------------------------------- |
+| `npm run dev`       | Vite dev server (plain SPA, no prerender; `/fa/` etc. work)         |
+| `npm run serve`     | `scripts/serve.mjs` — static `dist/` server on 127.0.0.1:4100       |
+| `npm run qa:visual` | Playwright + axe over a running server (see README)                 |
+| `npm run icons`     | Re-render the platform icons in `public/` from `favicon.png`        |
+| `npm run service:*` | systemd unit `wallet-landing`, running `serve.mjs` behind nginx     |
+| `npm run check`     | typecheck + lint + format:check — run this before calling work done |
 
 ## Stack
 
@@ -165,8 +161,11 @@ Markdown files, no admin panel, no database, in all ten languages:
   when `import.meta.env.SSR || import.meta.env.DEV`, so the production client
   build tree-shakes every body out; `PostBody.tsx` reads the markup back off
   the prerendered DOM, which also keeps hydration a no-op. Adding fifty posts
-  therefore costs the landing page nothing. If you make the body reach React
-  some other way, check `dist/assets/*.js` for a sentence from a post.
+  therefore adds no post text to the landing page. If you make the body reach
+  React some other way, check `dist/assets/*.js` for a sentence from a post.
+  The frontmatter is the exception: `meta` is eager, so every post's title,
+  description and tags, in every language, are in the one bundle every page
+  loads - about 330 bytes a file, which at 350 files is over a third of it.
 - **Reading time** is counted at build time — words, or Han ideographs where
   there are no spaces.
 - **Dates stay ISO** in the mono face. They are data, and a `<time dateTime>`
@@ -176,6 +175,24 @@ Markdown files, no admin panel, no database, in all ten languages:
   the one place with typographic defaults instead of utilities. All logical
   properties, so RTL mirrors for free. Links there are underlined ink, never
   the seal blue.
+- **Two kinds of post.** The explainers are evergreen and name nobody. The
+  posts tagged `news` are pegged to a dated event about a named company, and
+  the rules for those are stricter: every figure is attributed in the sentence
+  to the source it came from, the `date` is the day the post was actually
+  published (never the day of the event), and the post ends with a `Sources`
+  list - the only external links on the blog. Where trackers disagree, say so
+  rather than pick one. The paragraph about Nura in them is held to the same
+  README-only rule as the landing page: it never says Nura detects, blocks or
+  would have prevented anything.
+- **Links between posts are written per language** (`/fa/blog/<slug>/`), as on
+  the text pages; the markdown does not know which locale it is in.
+- **The index order is date, then slug** (`byNewest` in `posts.ts`). Posts
+  published on one day tie on the date, and a comparator that leaves a tie
+  open is sorted differently by Node and by the reader's browser - a hydration
+  mismatch on the index.
+- **A frontmatter value must not start or end with a quotation mark.** The
+  parser strips one from each end, so a title that opens with a quoted word
+  loses the quote.
 
 ## Text pages
 
@@ -199,6 +216,16 @@ Privacy policy, terms of use and support, at `/<slug>/` and `/<lang>/<slug>/`
   not a hand-drawn asset: the source page is `design/og.html`, opened at
   1200x630 and captured. Re-render it if the headline or the platform list
   changes, since it repeats them as text.
+- **The platform icons are rendered too.** `public/favicon.png` (512px, full
+  bleed on the icon's own pure black) is the master; `npm run icons`
+  (`scripts/icons.mjs`) renders `favicon.ico` (16/32/48), `apple-touch-icon.png`
+  (180), `icon-192.png` and `icon-maskable-512.png` from it, and all of them
+  are checked in. Re-run it when the master changes rather than editing an
+  output. Two framings differ from the master on purpose: the `.ico` is drawn
+  15% larger, because the mark at 70% of a 16px tab is eleven pixels; the
+  maskable one is drawn at 88%, because Android only promises to show a
+  centred circle 80% of the icon wide and the sparkles reach past it. It is
+  padded with `#000`, not `--color-paper`, or the padding shows as a seam.
 - `src/site.config.ts` holds what is the same in every language: brand name,
   canonical origin, icon, social image, repository, platform list. Title and
   description are per language, in the content files. `Seo.tsx` turns both
@@ -260,7 +287,10 @@ Privacy policy, terms of use and support, at `/<slug>/` and `/<lang>/<slug>/`
     self-custody product must not create. Change it to `standalone` only if
     making the page itself installable is actually wanted.
   - The icon links (`icon`, `apple-touch-icon`) stay in `index.html`: they are
-    the same in every language. `theme_color` comes from `siteConfig.themeColor`,
+    the same in every language. The manifest lists 192 and 512 as `any` and the
+    maskable file as its own `maskable` entry - never `any maskable` on one
+    file, which gets the full-bleed artwork cropped by the launcher.
+    `theme_color` comes from `siteConfig.themeColor`,
     which `index.html`'s `<meta name="theme-color">` and `--color-paper` in
     `index.css` repeat - keep the three in step.
 
@@ -291,7 +321,7 @@ not the violet-gradient-and-glass-card crypto default.
   label in a start-side rail, content in the main column, hairline rule between
   sections. Numbering (01/02/03) appears only in the seal section, because that
   is the one place the order is real information. The builds section is rows,
-  not cards: five platforms, one hairline each, a monochrome platform mark
+  not cards: six platforms, one hairline each, a monochrome platform mark
   (`PlatformIcon.tsx`) at the start of the row and the links at the end. A
   platform with no build says so in the link's place.
 
@@ -345,9 +375,3 @@ Search the tree for `TODO(content)`, `TODO(design)` and `TODO(deploy)`:
 Every product claim on the page traces to the Nura Wallet README. Do not add
 security claims beyond it — this is the page people use to decide whether to
 trust the app with their keys.
-
-## Claude Code plugins enabled for this project
-
-`.claude/settings.json` enables, at project scope:
-`frontend-design`, `superdesign`, `modern-web-guidance`, `chrome-devtools-mcp`,
-`playwright`.
