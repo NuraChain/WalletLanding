@@ -1,0 +1,17 @@
+# Installed and built inside the image. A node_modules from the host carries
+# that machine's native binaries (rolldown, tailwind's oxide, lightningcss),
+# which are the wrong ones for the container.
+node_modules
+dist
+dist-ssr
+.vite-react-ssg-temp
+
+# Not part of the build
+.git
+.claude
+.playwright-mcp
+artifacts
+.vscode
+.idea
+*.log
+.env*

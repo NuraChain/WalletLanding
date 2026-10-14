@@ -294,6 +294,25 @@ Privacy policy, terms of use and support, at `/<slug>/` and `/<lang>/<slug>/`
     which `index.html`'s `<meta name="theme-color">` and `--color-paper` in
     `index.css` repeat - keep the three in step.
 
+## Docker
+
+`Dockerfile` builds the site and runs `scripts/serve.mjs` on it, for hosts that
+deploy from the repository (Coolify) rather than from a checkout with the
+systemd unit. Two stages: the build one has the toolchain, the one that runs
+has only `dist/` and `serve.mjs`.
+
+- **The container listens on `0.0.0.0:4100`**, set by `HOST` and `PORT` in the
+  image, because `serve.mjs` defaults to loopback and nothing outside a
+  container can reach that. The healthcheck reads `PORT` too, so overriding it
+  moves both.
+- **There is no nginx in the image, so nothing rewrites the origin.** The pages
+  ship with whatever `ORIGIN_PLACEHOLDER` holds at build time. TLS and
+  compression belong to the host's proxy, as they do to nginx elsewhere.
+- **The build fails if `dist/index.html` or `dist/fa/index.html` has no
+  `<h1>`** - the prerender check from above, as a gate.
+- **The healthcheck is `node`**, because the slim image has neither `curl` nor
+  `wget`; a check configured in the host's dashboard would need one of them.
+
 ## Design system
 
 Direction: **a datasheet for a sealed instrument, in the app icon's colours.**
