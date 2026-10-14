@@ -235,25 +235,21 @@ Privacy policy, terms of use and support, at `/<slug>/` and `/<lang>/<slug>/`
   at the site root; only `WebPage` is per-page, and it is what carries this
   URL's language, title and image. Keeping per-page facts off the shared `@id`s
   is what stops the ten pages from merging into one contradictory entity.
-- **The domain is not in this repo.** The site is served by nginx, so the host
-  it answers on is nginx's to know. Every absolute URL — canonical, hreflang,
-  Open Graph, JSON-LD, and the `robots.txt` / `sitemap.xml` that
-  `vite.config.ts` emits at build time — is written with `ORIGIN_PLACEHOLDER`
-  from `src/site.config.ts`: `https://origin.invalid`, a reserved name, so a
-  server that was never configured fails visibly instead of pointing every
-  canonical at somebody else's site.
-  - nginx replaces it with `sub_filter`, and the server config is not in this
-    repo. What that config has to get right, because the build depends on it:
-    `sub_filter_types` must name `text/xml` and `text/plain` as well as the
-    default `text/html`, since the sitemap and robots.txt carry absolute URLs
-    the formats require; `sub_filter_once` must be off, since a page holds
-    dozens of them; the replacement should be `$scheme://$server_name` rather
-    than `$host`, which is client-supplied; and `gzip_static` must stay off,
-    since sub_filter cannot rewrite a body it did not decompress.
+- **The domain is baked in at build time.** Every absolute URL — canonical,
+  hreflang, Open Graph, JSON-LD, and the `robots.txt` / `sitemap.xml` that
+  `vite.config.ts` emits — is written with `ORIGIN_PLACEHOLDER` from
+  `src/site.config.ts`, which is `https://nurawallet.app`. The name is left
+  over from when it held `https://origin.invalid` and nginx rewrote it on the
+  way out with `sub_filter`. Nothing rewrites it now, under nginx or in the
+  Docker image; an nginx rule for it that is still in place finds nothing to
+  replace.
+  - Serving the site on another host works, but its canonicals and sitemap
+    still name `nurawallet.app`. Moving to a new domain means changing that
+    constant and rebuilding.
   - In the browser `absoluteUrl` resolves the origin from `location` instead,
     read off `globalThis` because `vite.config.ts` type-checks this file without
-    the DOM lib. So JavaScript clients are correct regardless; the rewrite is
-    for the crawlers that never run it.
+    the DOM lib. So JavaScript clients see the host actually serving the page;
+    crawlers that never run it get the baked one.
   - `vite.config.ts` imports `src/site.config.ts`, so keep that file free of
     Vite and browser globals at the top level, the way `locales.ts` is.
   - `robots.txt` and `sitemap.xml` are generated, not checked in; don't add
@@ -276,11 +272,8 @@ Privacy policy, terms of use and support, at `/<slug>/` and `/<lang>/<slug>/`
   site in ten languages rather than ten apps - the same split the JSON-LD graph
   makes; only `lang`, `dir` and `start_url` differ.
   - **Every URL in it is root-relative**, so the origin never comes up.
-    `sub_filter` only rewrites the types named in `sub_filter_types`
-    (`text/html`, `text/xml`, `text/plain`), and `application/manifest+json` is
-    not one of them - an absolute URL here would ship the placeholder origin
-    untouched. Manifest URLs resolve against the manifest, so going relative
-    costs nothing and spares the nginx config one more thing to get right.
+    Manifest URLs resolve against the manifest itself, so going relative costs
+    nothing and keeps the ten files right on whatever host serves them.
   - **`display` is `browser`, deliberately.** This site is the datasheet for a
     native wallet, not the wallet; an installed standalone window carrying the
     app's icon and name while being a marketing page is the confusion a
@@ -305,9 +298,9 @@ has only `dist/` and `serve.mjs`.
   image, because `serve.mjs` defaults to loopback and nothing outside a
   container can reach that. The healthcheck reads `PORT` too, so overriding it
   moves both.
-- **There is no nginx in the image, so nothing rewrites the origin.** The pages
-  ship with whatever `ORIGIN_PLACEHOLDER` holds at build time. TLS and
-  compression belong to the host's proxy, as they do to nginx elsewhere.
+- **The pages name `https://nurawallet.app`** (see "SEO"), so that is the
+  domain to give the host. TLS and compression belong to the host's proxy, as
+  they do to nginx elsewhere.
 - **The build fails if `dist/index.html` or `dist/fa/index.html` has no
   `<h1>`** - the prerender check from above, as a gate.
 - **The healthcheck is `node`**, because the slim image has neither `curl` nor

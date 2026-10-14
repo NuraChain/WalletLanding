@@ -4,9 +4,8 @@
 #
 #   sudo npm run service:install
 #
-# The unit runs scripts/serve.mjs on 127.0.0.1:4100. nginx proxies to it and
-# rewrites the placeholder origin into the real domain - see the README. If
-# nginx serves dist/ from disk instead, none of this is needed.
+# The unit runs scripts/serve.mjs on 127.0.0.1:4100, and nginx proxies to it.
+# If nginx serves dist/ from disk instead, none of this is needed.
 
 set -euo pipefail
 

@@ -156,9 +156,9 @@ function sitemapEntries(buildDate: string): SitemapEntry[] {
  * icon and colours that a share or an add-to-home-screen shows; making the
  * page installable is a one-word change here if that is ever wanted.
  *
- * Every URL in it is root-relative, because nginx's sub_filter only rewrites
- * text/html, text/xml and text/plain - an absolute URL here would keep the
- * placeholder origin. `id` and `scope` are the site root in all ten, so the
+ * Every URL in it is root-relative: manifest URLs resolve against the manifest
+ * itself, so that costs nothing and keeps the files right on whatever host
+ * serves them. `id` and `scope` are the site root in all ten, so the
  * ten files describe one site in ten languages rather than ten separate apps,
  * which is the same split the JSON-LD graph in Seo.tsx makes.
  *
@@ -202,13 +202,11 @@ function manifest(locale: Locale): string {
  * Emits robots.txt, sitemap.xml and the ten manifests at build time rather than
  * checking them into public/.
  *
- * robots.txt and sitemap.xml are generated so they carry the same placeholder
- * origin the meta tags do and are rewritten by the same nginx rule; both
- * formats require absolute URLs, so neither can dodge the question by going
- * relative. The manifests are the opposite case: sub_filter never reaches
- * application/manifest+json, so they are relative precisely because the rewrite
- * would not touch them. They are generated for a different reason - one per
- * language, off the same locale list every other per-language file comes from.
+ * robots.txt and sitemap.xml are generated so they carry the same origin the
+ * meta tags do, from the one constant in site.config.ts; both formats require
+ * absolute URLs, so neither can dodge the question by going relative. The
+ * manifests are generated for a different reason - one per language, off the
+ * same locale list every other per-language file comes from.
  */
 function seoFiles(origin: string): Plugin {
   let isSsrBuild = false

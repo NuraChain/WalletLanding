@@ -11,14 +11,13 @@
  */
 
 /**
- * The origin every absolute URL on this site is written with - and deliberately
- * a placeholder, not the real domain. The site is served by nginx, and the host
- * it answers on is nginx's to know, so the build bakes in no domain: nginx
- * rewrites this string to the live origin on the way out - see the README.
+ * The origin every absolute URL on this site is written with: canonicals,
+ * hreflang, Open Graph, JSON-LD, robots.txt and sitemap.xml. It is baked in at
+ * build time and nothing rewrites it on the way out, so this is the domain the
+ * site has to be served on - moving it means changing this and rebuilding.
  *
- * It is a reserved `.invalid` name on purpose. A server that was never
- * configured then fails visibly, instead of quietly pointing every canonical on
- * the site at somebody else's domain.
+ * The name is left over from when this held `https://origin.invalid` and nginx
+ * substituted the live origin with sub_filter. That rewrite is gone.
  *
  * vite.config.ts imports it for robots.txt and sitemap.xml, which is why
  * nothing in this file may touch Vite or browser globals at the top level.
@@ -129,9 +128,10 @@ export const siteConfig = {
 
 /**
  * The origin to write into this render's URLs. In a browser it is the host
- * actually being served, whatever nginx answers as, so a JavaScript client is
- * right whether or not the rewrite is configured. During the prerender there is
- * no such host, so the placeholder goes in and nginx substitutes it later.
+ * actually being served, so a JavaScript client gets that host even on a copy
+ * of the site served somewhere else. During the prerender there is no such
+ * host, so ORIGIN_PLACEHOLDER goes in, and that is what a crawler that never
+ * runs JavaScript sees.
  *
  * `location` is read off `globalThis` rather than as a bare global because
  * vite.config.ts type-checks this file without the DOM lib - and because during

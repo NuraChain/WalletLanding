@@ -1,4 +1,5 @@
-// Serves the prerendered site from dist/, for the systemd unit to run.
+// Serves the prerendered site from dist/, for the systemd unit and the Docker
+// image to run.
 //
 //   npm run serve                 # 127.0.0.1:4100
 //   PORT=8080 HOST=0.0.0.0 npm run serve
@@ -10,12 +11,10 @@
 //
 // Two things here exist because of what is in front of this process:
 //
-//   - It does not compress. nginx compresses, and nginx's sub_filter - which
-//     rewrites the placeholder origin into the real domain - cannot rewrite a
-//     body it did not decompress. A gzipping upstream would silently ship
-//     origin.invalid to every crawler.
+//   - It does not compress. Like TLS, that is the proxy's job - nginx, or the
+//     host's proxy in front of the Docker image - so it is set in one place.
 //   - It binds to loopback by default. The only thing that should reach it is
-//     the proxy. Set HOST to change that deliberately.
+//     the proxy. Set HOST to change that deliberately, as the Dockerfile does.
 import { createReadStream } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import { createServer } from 'node:http'
@@ -78,8 +77,8 @@ async function locate(pathname) {
 
 /**
  * Assets are content-hashed, so the name changes when the bytes do and they can
- * be cached forever. Everything else is rewritten on the way out by nginx and
- * republished on every deploy, so it is revalidated instead.
+ * be cached forever. Everything else keeps its URL from deploy to deploy while
+ * its bytes change, so it is revalidated instead.
  */
 function cacheControl(pathname) {
   return pathname.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache'
