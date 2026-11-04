@@ -49,7 +49,9 @@ Useful commands:
 | npm run build | Type-check and prerender the production website |
 | npm run preview | Preview the Vite build |
 | npm run serve | Serve the built site with the repository's Node.js script |
-| npm run check | Run type checking, linting and formatting checks |
+| npm run typecheck | Run TypeScript project checks |
+| npm run lint | Run Oxlint |
+| npm run format:check | Verify formatting with Oxfmt |
 | npm run qa:visual | Run responsive visual checks |
 
 The repository also includes service install, start, stop, restart, status and deploy scripts for its supported server setup.
